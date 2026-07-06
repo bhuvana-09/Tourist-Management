@@ -12,7 +12,8 @@ api.interceptors.request.use(
       config.url.startsWith("/packages") || 
       config.url.startsWith("/itineraries") || 
       config.url.startsWith("/destinations") ||
-      config.url.startsWith("/bookings")
+      config.url.startsWith("/bookings") ||
+      config.url.startsWith("/coupons")
     )) {
       config.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
       config.withCredentials = true;
@@ -32,7 +33,8 @@ api.interceptors.response.use(
       url.includes("/packages") || 
       url.includes("/itineraries") || 
       url.includes("/destinations") ||
-      url.includes("/bookings")
+      url.includes("/bookings") ||
+      url.includes("/coupons")
     ) {
       if (response.data && response.data.success === true && response.data.data !== undefined) {
         if (response.data.meta !== undefined) {

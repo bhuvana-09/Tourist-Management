@@ -28,9 +28,16 @@ export default function AddBooking() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Coupon states
+  const [couponCodeInput, setCouponCodeInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState("");
+  const [couponChecking, setCouponChecking] = useState(false);
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(bookingValidationSchema),
@@ -41,6 +48,10 @@ export default function AddBooking() {
       date: ""
     }
   });
+
+  // Watch form fields to compute price dynamically
+  const selectedPackageId = watch("packageId");
+  const travelersCount = watch("travelers") || 1;
 
   useEffect(() => {
     // Fetch packages to populate checkout dropdown selection
@@ -53,11 +64,54 @@ export default function AddBooking() {
       });
   }, []);
 
+  // Find package object details
+  const selectedPackage = packages.find((p) => p.id === selectedPackageId);
+  const packageUnitPrice = selectedPackage ? selectedPackage.price : 0;
+  const originalTotalPrice = packageUnitPrice * Number(travelersCount);
+  
+  // Apply coupon calculations
+  const discountPercent = appliedCoupon ? appliedCoupon.discountPercent : 0;
+  const discountAmount = (originalTotalPrice * discountPercent) / 100;
+  const finalPrice = originalTotalPrice - discountAmount;
+
+  const handleApplyCoupon = async () => {
+    if (!couponCodeInput.trim()) {
+      setCouponError("Please enter a coupon code");
+      return;
+    }
+
+    setCouponChecking(true);
+    setCouponError("");
+    setAppliedCoupon(null);
+
+    try {
+      const res = await api.get(`/coupons/validate/${couponCodeInput.trim()}`);
+      setAppliedCoupon(res);
+      setCouponError("");
+    } catch (err) {
+      console.error("Failed to validate coupon:", err);
+      setCouponError(err.response?.data?.message || "Invalid coupon code");
+    } finally {
+      setCouponChecking(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCodeInput("");
+    setCouponError("");
+  };
+
   const onSubmit = (data) => {
     setError("");
     setLoading(true);
 
-    api.post("/bookings", data)
+    const payload = {
+      ...data,
+      couponCode: appliedCoupon ? appliedCoupon.code : undefined
+    };
+
+    api.post("/bookings", payload)
       .then(() => {
         alert("Booking created successfully!");
         navigate("/my-bookings");
@@ -167,6 +221,70 @@ export default function AddBooking() {
               )}
             </div>
           </div>
+
+          {/* Coupon Code Section */}
+          <div className="border-t border-slate-100 pt-6">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              Have a Coupon Code?
+            </label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="e.g., WINTER20"
+                value={couponCodeInput}
+                onChange={(e) => setCouponCodeInput(e.target.value)}
+                className={`input-field uppercase ${couponError ? "border-red-500" : ""}`}
+                disabled={loading || couponChecking || !!appliedCoupon}
+              />
+              {appliedCoupon ? (
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  className="btn-secondary px-4 text-sm whitespace-nowrap text-red-600 hover:bg-red-50 hover:border-red-200"
+                >
+                  Remove
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleApplyCoupon}
+                  disabled={loading || couponChecking || !couponCodeInput.trim()}
+                  className="btn-secondary px-6 text-sm font-medium whitespace-nowrap"
+                >
+                  {couponChecking ? "Verifying..." : "Apply"}
+                </button>
+              )}
+            </div>
+            {couponError && (
+              <p className="text-red-500 text-xs mt-1">{couponError}</p>
+            )}
+            {appliedCoupon && (
+              <p className="text-green-600 text-xs font-semibold mt-1">
+                ✓ Coupon code applied successfully! {appliedCoupon.discountPercent}% discount.
+              </p>
+            )}
+          </div>
+
+          {/* Price Breakdown Preview */}
+          {selectedPackageId && (
+            <div className="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-2">
+              <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Pricing Breakdown</h3>
+              <div className="flex justify-between text-sm text-slate-600">
+                <span>Base Price (₹{packageUnitPrice} × {travelersCount})</span>
+                <span>₹{originalTotalPrice}</span>
+              </div>
+              {appliedCoupon && (
+                <div className="flex justify-between text-sm text-green-600 font-semibold">
+                  <span>Discount ({appliedCoupon.discountPercent}%)</span>
+                  <span>- ₹{discountAmount}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-base font-bold text-slate-900 border-t border-slate-200 pt-2 mt-2">
+                <span>Total Pricing</span>
+                <span className="text-blue-700 text-lg">₹{finalPrice}</span>
+              </div>
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">

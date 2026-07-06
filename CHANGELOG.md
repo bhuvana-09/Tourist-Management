@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 9] - 2026-07-06
+### Added
+- Created backend Coupon model [Coupon.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Coupon.js) storing code, discountPercent, expiryDate, and usage counts.
+- Created backend Coupon controller [coupon.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/coupon.controller.js) and routing [coupon.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/coupon.routes.js) with validation-preview helper.
+- Created Admin Coupons management interface [AdminCoupons.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AdminCoupons.jsx) allowing admins to audit coupon listings and add codes.
+
+### Changed
+- Modified booking model [Booking.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Booking.js) to store status (pending/confirmed/cancelled/completed), totalPrice, and coupon references.
+- Updated booking controller [booking.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/booking.controller.js) to compute pricing server-side, validate coupons before checkout, and support booking cancellations.
+- Updated booking routing [booking.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/booking.routes.js) to register `PATCH /api/bookings/:id/cancel`.
+- Extended Axios interceptors in [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) to switch url instances for `/coupons`.
+- Modified [AddBooking.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddBooking.jsx) to support optional coupon input, showing pricing previews, and sending codes at creation.
+- Modified [MyBookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/MyBookings.jsx) and [Bookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Bookings.jsx) to render status indicators and control cancellations. Added status filters for admins.
+- Added `/admin/coupons` route in [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx) and mounted coupons tab in [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/Navbar.jsx) for admins.
+
+---
+
 ## [Sprint 8] - 2026-07-06
 ### Added
 - Installed frontend form and schema validation dependencies `react-hook-form`, `zod`, and `@hookform/resolvers`.

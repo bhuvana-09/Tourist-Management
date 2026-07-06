@@ -25,6 +25,57 @@ export default function MyBookings() {
     fetchMyBookings();
   }, []);
 
+  const handleCancel = async (id) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) {
+      return;
+    }
+
+    try {
+      await api.patch(`/bookings/${id}/cancel`);
+      alert("Booking cancelled successfully!");
+      await fetchMyBookings(); // Refresh the list
+    } catch (err) {
+      console.error("Failed to cancel booking:", err);
+      alert(err.response?.data?.message || "Failed to cancel booking. Please try again.");
+    }
+  };
+
+  const getStatusBadge = (status) => {
+    const s = status || "pending"; // Default pending for legacy checkouts
+    switch (s) {
+      case "pending":
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-200">
+            Pending
+          </span>
+        );
+      case "confirmed":
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-50 text-green-700 border border-green-200">
+            Confirmed
+          </span>
+        );
+      case "cancelled":
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200">
+            Cancelled
+          </span>
+        );
+      case "completed":
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+            Completed
+          </span>
+        );
+      default:
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-50 text-slate-600 border border-slate-200">
+            Legacy
+          </span>
+        );
+    }
+  };
+
   return (
     <div className="page-shell space-y-8 animate-fade">
       {/* Header Section */}
@@ -86,8 +137,15 @@ export default function MyBookings() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 max-w-4xl mx-auto">
             {bookings.map((b, index) => {
               const packageName = b.packageId?.packageName || b.packageName || "Unknown Package";
-              const price = b.packageId?.price ? `₹${b.packageId.price * b.travelers}` : "N/A";
               
+              // Handle default fallback pricing for legacy bookings
+              const computedLegacyPrice = b.packageId?.price ? b.packageId.price * b.travelers : 0;
+              const actualTotalPrice = b.totalPrice !== undefined ? b.totalPrice : computedLegacyPrice;
+              const priceDisplay = actualTotalPrice > 0 ? `₹${actualTotalPrice}` : "N/A";
+              
+              const currentStatus = b.status || "pending";
+              const isCancellable = currentStatus === "pending" || currentStatus === "confirmed";
+
               return (
                 <div
                   key={b.id}
@@ -97,12 +155,10 @@ export default function MyBookings() {
                   <div>
                     {/* Header */}
                     <div className="pb-4 border-b border-slate-100 mb-4 flex justify-between items-center">
-                      <h2 className="text-xl font-bold text-slate-900">
+                      <h2 className="text-xl font-bold text-slate-900 truncate pr-2">
                         {packageName}
                       </h2>
-                      <span className="px-3 py-1 rounded-full bg-green-50 text-[10px] font-bold text-green-700 uppercase tracking-wide">
-                        Confirmed
-                      </span>
+                      {getStatusBadge(b.status)}
                     </div>
 
                     {/* Details */}
@@ -137,17 +193,42 @@ export default function MyBookings() {
                         </div>
                       </div>
 
+                      {b.couponApplied && (
+                        <div className="flex items-center gap-3">
+                          <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2zM9 16h6M9 12h6M9 8h6" />
+                          </svg>
+                          <div className="text-sm">
+                            <span className="text-slate-500">Coupon Used: </span>
+                            <span className="font-semibold text-green-600">{b.couponApplied.code} ({b.couponApplied.discountPercent}% Off)</span>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="text-sm">
                           <span className="text-slate-500">Total Price: </span>
-                          <span className="font-bold text-green-600 text-lg">{price}</span>
+                          <span className="font-bold text-green-600 text-lg">{priceDisplay}</span>
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Cancel Button */}
+                  {isCancellable && (
+                    <button
+                      onClick={() => handleCancel(b.id)}
+                      className="mt-6 w-full inline-flex items-center justify-center gap-2 btn-secondary text-sm py-2.5 text-red-600 border border-red-100 hover:bg-red-50 hover:border-red-200"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Cancel Reservation
+                    </button>
+                  )}
                 </div>
               );
             })}

@@ -13,6 +13,7 @@ import Packages from "./pages/Packages";
 import Itineraries from "./pages/Itineraries";
 import Bookings from "./pages/Bookings";
 import MyBookings from "./pages/MyBookings";
+import AdminCoupons from "./pages/AdminCoupons";
 import AddBooking from "./pages/AddBooking";
 import AddDestination from "./pages/AddDestination";
 import AddPackage from "./pages/AddPackage";
@@ -88,6 +89,11 @@ export default function App() {
               } />
               <Route path="/bookings/add" element={<ProtectedRoute><AddBooking /></ProtectedRoute>} />
               <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+              <Route path="/admin/coupons" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AdminCoupons />
+                </ProtectedRoute>
+              } />
             </Routes>
           </main>
 

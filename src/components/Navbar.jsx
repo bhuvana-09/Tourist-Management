@@ -48,9 +48,14 @@ export default function Navbar() {
                 My Bookings
               </NavLink>
               {user?.role === "admin" && (
-                <NavLink to="/bookings" className={navLinkClass}>
-                  Bookings
-                </NavLink>
+                <>
+                  <NavLink to="/bookings" className={navLinkClass}>
+                    Bookings
+                  </NavLink>
+                  <NavLink to="/admin/coupons" className={navLinkClass}>
+                    Coupons
+                  </NavLink>
+                </>
               )}
             </div>
           )}
@@ -134,13 +139,22 @@ export default function Navbar() {
               My Bookings
             </NavLink>
             {user?.role === "admin" && (
-              <NavLink
-                to="/bookings"
-                className={navLinkClass}
-                onClick={() => setOpen(false)}
-              >
-                Bookings
-              </NavLink>
+              <>
+                <NavLink
+                  to="/bookings"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Bookings
+                </NavLink>
+                <NavLink
+                  to="/admin/coupons"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Coupons
+                </NavLink>
+              </>
             )}
 
             <button

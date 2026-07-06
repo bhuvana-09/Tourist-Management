@@ -5,6 +5,7 @@ const {
   getMyBookings,
   getBookingById,
   createBooking,
+  cancelBooking,
   deleteBooking
 } = require('../controllers/booking.controller');
 
@@ -21,5 +22,8 @@ router.route('/me')
 router.route('/:id')
   .get(authenticate, getBookingById)
   .delete(authenticate, authorize('admin'), deleteBooking);
+
+router.route('/:id/cancel')
+  .patch(authenticate, cancelBooking);
 
 module.exports = router;

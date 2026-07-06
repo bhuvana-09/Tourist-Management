@@ -35,6 +35,21 @@ const bookingSchema = new mongoose.Schema(
       ref: 'User',
       required: false,
       default: null
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+      default: 'pending'
+    },
+    totalPrice: {
+      type: Number,
+      default: 0
+    },
+    couponApplied: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Coupon',
+      required: false,
+      default: null
     }
   },
   {
