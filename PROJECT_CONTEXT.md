@@ -5,17 +5,18 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, and `Reviews`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, and `AI`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
 - **Destinations**: **Completed** (Cloudinary image upload integration, database schema update from `image: String` to `images: Array`, and server-side search/filter/sort/pagination completed in Sprint 6. Hardcoded city image mapping resolved)
 - **Packages**: **Completed** (CRUD API and model validation finished in Sprint 7. Added optional/nullable `destinationId` linking relation)
-- **Itineraries**: **Completed** (CRUD API and dropdown destination select validations finished in Sprint 7. Retired legacy free-text location entry)
+- **Itineraries**: **Completed** (CRUD API and dropdown destination select validations finished in Sprint 7. Retired legacy free-text location entry. Added AI indicators in Schema in Sprint 12)
 - **Bookings**: **Completed** (CRUD API, RHF/Zod checkout validation, and status lifecycle cancellation flow finished in Sprint 9)
 - **Coupons**: **Completed** (Database model, validator middleware, validation-preview endpoint, and admin coupons manager finished in Sprint 9)
 - **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
 - **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
+- **AI**: **Completed** (Gemini API SDK wrappers, custom timeouts & retries, raw JSON cleaners, personalized grounding validations, recommendation strips, and schedule generators finished in Sprint 12)
 
 ## Current APIs
 
@@ -81,10 +82,13 @@ This document provides an overview of the architecture, data models, API endpoin
 - `POST /api/reviews` - Submit feedback for an eligible trip booking (Authenticated Booking Owner)
 - `DELETE /api/reviews/:id` - Delete a review and trigger ratings re-computation (Owner or Admin Only)
 
+#### AI Endpoints
+- `POST /api/ai/recommendations` - Retrieve personalized destination recommendations grounded in booking history (Authenticated User)
+- `POST /api/ai/itinerary` - Generate day-by-day sightseeing itinerary preview for a destination (Public)
+
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 12: AI Layer Setup**
-  - Integrate an LLM agent/chatbot inside the application.
-  - Provide users with personalized trip recommendations and destinations Q&A.
+- **Sprint 13: Chatbot, Optimization, and Travel Assistants**
+  - Build additional AI capabilities: FAQ generators, budget optimizers, packing checklist builders, and interactive support chatbots.

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 12] - 2026-07-06
+### Added
+- Installed `@google/generative-ai` backend SDK dependency.
+- Created reusable Gemini client wrapper [aiService.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/services/aiService.js) implementing request timeout promises, single retries, and graceful fallback exceptions.
+- Created [aiPrompts.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/services/aiPrompts.js) containing templates instructing raw JSON formatting.
+- Created [ai.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/ai.controller.js) and [ai.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/ai.routes.js) containing personalized recommendations and day itinerary schedule generators.
+- Created frontend personalized banner [AIRecommendationStrip.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/AIRecommendationStrip.jsx) and interactive preview [AIItineraryGenerator.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/AIItineraryGenerator.jsx).
+- Added `GEMINI_API_KEY` to backend `.env.example`.
+
+### Changed
+- Added schema indicator `generatedByAI` to [Itinerary.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Itinerary.js).
+- Extended [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) request/response interceptors to route `/ai` requests.
+- Integrated AI recommendations strip on Home page [Home.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Home.jsx) for logged-in travelers.
+- Integrated AI itinerary planner sidebar on [DestinationDetail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/DestinationDetail.jsx).
+
+---
+
 ## [Sprint 11] - 2026-07-06
 ### Added
 - Created backend Review model [Review.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Review.js) referencing User, Destination, and Booking.

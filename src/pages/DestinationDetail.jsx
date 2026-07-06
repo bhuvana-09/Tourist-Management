@@ -5,6 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import RatingStars from "../components/RatingStars";
 import ReviewCard from "../components/ReviewCard";
 import ReviewForm from "../components/ReviewForm";
+import AIItineraryGenerator from "../components/AIItineraryGenerator";
 
 export default function DestinationDetail() {
   const { id } = useParams();
@@ -261,6 +262,8 @@ export default function DestinationDetail() {
 
           {/* Side Review Form / Login CTA */}
           <div className="space-y-6">
+            <AIItineraryGenerator destinationId={id} />
+
             {!isLoggedIn ? (
               <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center space-y-4">
                 <h3 className="font-bold text-slate-800 text-base">Been here before?</h3>

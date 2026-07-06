@@ -20,6 +20,10 @@ const itinerarySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Time is required'],
       trim: true
+    },
+    generatedByAI: {
+      type: Boolean,
+      default: false
     }
   },
   {

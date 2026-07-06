@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import AIRecommendationStrip from "../components/AIRecommendationStrip";
 
 export default function Home() {
+  const { isLoggedIn } = useAuth();
   return (
     <div className="page-shell space-y-16">
       {/* HERO SECTION WITH IMAGE */}
@@ -43,6 +46,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* AI RECOMMENDATION STRIP */}
+      {isLoggedIn && <AIRecommendationStrip />}
 
       {/* BEST HOLIDAY PACKAGE SECTION */}
       <section className="space-y-6">
