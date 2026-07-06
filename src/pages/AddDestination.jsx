@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api/axiosInstance";
+import { backendApi as api } from "../api/axiosInstance";
 
 export default function AddDestination() {
   const [form, setForm] = useState({

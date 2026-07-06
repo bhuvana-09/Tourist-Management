@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../api/axiosInstance";
+import { backendApi as api } from "../api/axiosInstance";
 
 export default function Destinations() {
   const [destinations, setDestinations] = useState([]);
