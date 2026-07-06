@@ -289,6 +289,18 @@ export default function MyBookings() {
                         Pay Now
                       </button>
                     )}
+                    {/* Leave a Review Button (only shown for completed or paid past bookings) */}
+                    {(b.status === "completed" || (b.status === "confirmed" && b.paymentStatus === "paid" && new Date(b.date) < new Date())) && (
+                      <Link
+                        to={`/destinations/${b.packageId?.destinationId?._id || b.packageId?.destinationId || b.destinationId}?bookingId=${b.id}`}
+                        className="w-full inline-flex items-center justify-center gap-2 btn-secondary text-sm py-2.5 text-blue-600 border border-blue-100 hover:bg-blue-50 hover:border-blue-200"
+                      >
+                        <svg className="w-4 h-4 text-blue-500 fill-blue-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 .587l3.668 7.431 8.2 1.191-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.209l8.2-1.191L12 .587z" />
+                        </svg>
+                        Leave a Review
+                      </Link>
+                    )}
                     {isCancellable && (
                       <button
                         onClick={() => handleCancel(b.id)}

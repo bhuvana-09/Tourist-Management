@@ -273,54 +273,75 @@ export default function Destinations() {
             {destinations.map((dest, index) => (
               <div
                 key={dest.id}
-                className="animate-scale-in rounded-2xl bg-white shadow-lg overflow-hidden card-hover"
+                className="animate-scale-in rounded-2xl bg-white shadow-lg overflow-hidden card-hover flex flex-col justify-between"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
-                {/* Image */}
-                <div className="relative h-64 overflow-hidden">
-                  <img
-                    src={dest.images && dest.images[0]?.url ? dest.images[0].url : placeholder}
-                    alt={dest.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      e.currentTarget.src = placeholder;
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h2 className="text-xl font-bold text-white drop-shadow-lg">
-                      {dest.name}
-                    </h2>
-                    <p className="text-sm text-blue-100 mt-1">
-                      {dest.location}
+                <div>
+                  {/* Image Link */}
+                  <Link to={`/destinations/${dest.id}`} className="block relative h-64 overflow-hidden group">
+                    <img
+                      src={dest.images && dest.images[0]?.url ? dest.images[0].url : placeholder}
+                      alt={dest.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.src = placeholder;
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h2 className="text-xl font-bold text-white drop-shadow-lg group-hover:text-blue-200 transition-colors">
+                        {dest.name}
+                      </h2>
+                      <p className="text-sm text-blue-100 mt-1">
+                        {dest.location}
+                      </p>
+                    </div>
+                  </Link>
+
+                  <div className="p-6 space-y-4">
+                    {/* Rating Section */}
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                      <svg className="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 .587l3.668 7.431 8.2 1.191-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.857 1.4-8.168L.132 9.209l8.2-1.191L12 .587z" />
+                      </svg>
+                      <span className="font-bold text-slate-700">{dest.avgRating !== undefined ? dest.avgRating : 0}</span>
+                      <span>({dest.reviewCount !== undefined ? dest.reviewCount : 0} {dest.reviewCount === 1 ? 'review' : 'reviews'})</span>
+                    </div>
+
+                    <p className="text-sm text-slate-700 line-clamp-3">
+                      {dest.description}
                     </p>
+
+                    {/* Render tags if present */}
+                    {dest.tags && dest.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {dest.tags.map((t) => (
+                          <span key={t} className="px-2 py-0.5 rounded bg-slate-100 text-[10px] uppercase font-bold text-slate-600 tracking-wider">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <div className="p-6 space-y-4">
-                  <p className="text-sm text-slate-700 line-clamp-3">
-                    {dest.description}
-                  </p>
-
-                  {/* Render tags if present */}
-                  {dest.tags && dest.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5">
-                      {dest.tags.map((t) => (
-                        <span key={t} className="px-2 py-0.5 rounded bg-slate-100 text-[10px] uppercase font-bold text-slate-600 tracking-wider">
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                <div className="px-6 pb-6 space-y-3">
+                  {/* Public Details button */}
+                  <Link
+                    to={`/destinations/${dest.id}`}
+                    className="w-full inline-flex items-center justify-center gap-2 btn-secondary text-sm py-2.5"
+                  >
+                    View Details
+                  </Link>
 
                   {/* Action Buttons - Only visible to Admins */}
                   {isAdmin && (
-                    <div className="flex gap-3 pt-2">
+                    <div className="flex gap-3 pt-2 border-t border-slate-100">
                       <Link
                         to={`/destinations/edit/${dest.id}`}
-                        className="flex-1 inline-flex items-center justify-center gap-2 btn-secondary text-sm py-2.5"
+                        className="flex-1 inline-flex items-center justify-center gap-2 btn-secondary text-sm py-2"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                         Edit
@@ -328,9 +349,9 @@ export default function Destinations() {
 
                       <button
                         onClick={() => deleteDestination(dest.id, dest.name)}
-                        className="flex-1 inline-flex items-center justify-center gap-2 btn-danger text-sm py-2.5"
+                        className="flex-1 inline-flex items-center justify-center gap-2 btn-danger text-sm py-2"
                       >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                         Delete

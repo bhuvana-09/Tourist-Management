@@ -217,11 +217,36 @@ const deleteBooking = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Complete a booking (Admin Only)
+// @route   PATCH /api/bookings/:id/complete
+// @access  Private (Admin Only)
+const completeBooking = asyncHandler(async (req, res) => {
+  const booking = await Booking.findById(req.params.id);
+
+  if (!booking) {
+    res.status(404);
+    throw new Error('Booking not found');
+  }
+
+  booking.status = 'completed';
+  await booking.save();
+
+  const populated = await Booking.findById(booking._id)
+    .populate('packageId')
+    .populate('userId', 'name email role');
+
+  res.status(200).json({
+    success: true,
+    data: populated
+  });
+});
+
 module.exports = {
   getBookings,
   getMyBookings,
   getBookingById,
   createBooking,
   cancelBooking,
-  deleteBooking
+  deleteBooking,
+  completeBooking
 };

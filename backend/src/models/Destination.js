@@ -35,7 +35,15 @@ const destinationSchema = new mongoose.Schema(
         type: String,
         trim: true
       }
-    ]
+    ],
+    avgRating: {
+      type: Number,
+      default: 0
+    },
+    reviewCount: {
+      type: Number,
+      default: 0
+    }
   },
   {
     timestamps: true

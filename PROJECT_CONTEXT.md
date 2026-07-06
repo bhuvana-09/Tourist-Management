@@ -5,7 +5,7 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, and `Payments`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, and `Reviews`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
@@ -15,6 +15,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Bookings**: **Completed** (CRUD API, RHF/Zod checkout validation, and status lifecycle cancellation flow finished in Sprint 9)
 - **Coupons**: **Completed** (Database model, validator middleware, validation-preview endpoint, and admin coupons manager finished in Sprint 9)
 - **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
+- **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
 
 ## Current APIs
 
@@ -39,6 +40,7 @@ This document provides an overview of the architecture, data models, API endpoin
   - `order`: asc or desc
   - `page` / `limit`: page selector
 - `GET /api/destinations/:id` - Fetch single destination by ID (Public)
+- `GET /api/destinations/:id/reviews` - Fetch reviews for a specific destination (Public)
 - `POST /api/destinations` - Create a new destination with Cloudinary file upload (Admin Only)
 - `PUT/PATCH /api/destinations/:id` - Update destination details and upload replacement image (Admin Only)
 - `DELETE /api/destinations/:id` - Delete destination from system and destroy matching Cloudinary asset (Admin Only)
@@ -63,6 +65,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET /api/bookings/:id` - Fetch single booking details (Owner or Admin Only)
 - `POST /api/bookings` - Create new booking associated with logged-in user (Authenticated)
 - `PATCH /api/bookings/:id/cancel` - Cancel a pending or confirmed booking (Owner or Admin Only)
+- `PATCH /api/bookings/:id/complete` - Manually transition a booking to completed status (Admin Only)
 - `DELETE /api/bookings/:id` - Delete booking (Admin Only)
 
 #### Coupons Endpoints
@@ -74,10 +77,14 @@ This document provides an overview of the architecture, data models, API endpoin
 - `POST /api/payments/create-order` - Generate Razorpay transaction order (Authenticated Booking Owner)
 - `POST /api/payments/verify` - Strictly verify HMAC-SHA256 signature and update booking indicators (Authenticated Booking Owner)
 
+#### Reviews Endpoints
+- `POST /api/reviews` - Submit feedback for an eligible trip booking (Authenticated Booking Owner)
+- `DELETE /api/reviews/:id` - Delete a review and trigger ratings re-computation (Owner or Admin Only)
+
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 11: Reviews & Ratings**
-  - Implement a destination review/rating system where registered users can post feedbacks.
-  - Show average ratings dynamically on the Destinations catalog.
+- **Sprint 12: AI Layer Setup**
+  - Integrate an LLM agent/chatbot inside the application.
+  - Provide users with personalized trip recommendations and destinations Q&A.

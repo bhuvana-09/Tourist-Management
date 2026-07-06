@@ -24,6 +24,7 @@ const {
   updateDestination,
   deleteDestination
 } = require('../controllers/destination.controller');
+const { getReviewsForDestination } = require('../controllers/review.controller');
 
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
@@ -32,6 +33,9 @@ const upload = require('../middlewares/upload');
 router.route('/')
   .get(getDestinations)
   .post(authenticate, authorize('admin'), upload.single('image'), createDestination);
+
+router.route('/:id/reviews')
+  .get(getReviewsForDestination);
 
 router.route('/:id')
   .get(getDestinationById)

@@ -9,6 +9,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import Destinations from "./pages/Destinations";
+import DestinationDetail from "./pages/DestinationDetail";
 import Packages from "./pages/Packages";
 import Itineraries from "./pages/Itineraries";
 import Bookings from "./pages/Bookings";
@@ -44,6 +45,7 @@ export default function App() {
 
               <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
               <Route path="/destinations" element={<ProtectedRoute><Destinations /></ProtectedRoute>} />
+              <Route path="/destinations/:id" element={<DestinationDetail />} />
               
               {/* Write Destination routes gated for admin role only */}
               <Route path="/destinations/add" element={

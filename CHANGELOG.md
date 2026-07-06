@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 11] - 2026-07-06
+### Added
+- Created backend Review model [Review.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Review.js) referencing User, Destination, and Booking.
+- Created backend Review controllers [review.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/review.controller.js) and routes [review.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/review.routes.js) containing post, list, and delete actions.
+- Created reusable components [RatingStars.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/RatingStars.jsx), [ReviewCard.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/ReviewCard.jsx), and [ReviewForm.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/ReviewForm.jsx).
+- Created public destination detail page [DestinationDetail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/DestinationDetail.jsx).
+
+### Changed
+- Modified [Destination.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Destination.js) schema to contain computed `avgRating` and `reviewCount` fields.
+- Updated [booking.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/booking.controller.js) and [booking.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/booking.routes.js) to support `PATCH /api/bookings/:id/complete` manual overrides for admins.
+- Mounted reviews router inside [app.js](file:///C:/Users/ridhi/.gemini/antigravity/backend/src/app.js) and added reviews loader mapping inside [destination.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/backend/src/routes/destination.routes.js).
+- Modified [Destinations.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Destinations.jsx) to render rating stars and link grid card elements to the detail page.
+- Modified [MyBookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/MyBookings.jsx) to show a "Leave a Review" CTA for eligible completed or past reservations.
+- Registered `/destinations/:id` route inside [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx).
+
+---
+
 ## [Sprint 10] - 2026-07-06
 ### Added
 - Installed `razorpay` backend SDK dependency.
