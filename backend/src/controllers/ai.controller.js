@@ -168,7 +168,256 @@ const generateItineraryPreview = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Travel Q&A grounding chatbot
+// @route   POST /api/ai/chat
+// @access  Public
+const chatSupport = asyncHandler(async (req, res) => {
+  const { messageHistory, userMessage } = req.body;
+
+  if (!userMessage) {
+    res.status(400);
+    throw new Error('Please provide userMessage');
+  }
+
+  try {
+    const catalog = await Destination.find({});
+    const prompt = buildChatPrompt(messageHistory || [], userMessage, catalog);
+    const rawText = await generateContent(prompt);
+
+    if (!rawText) {
+      throw new Error('AI chatbot failed to return content');
+    }
+
+    res.status(200).json({
+      success: true,
+      data: rawText.trim(),
+      aiUnavailable: false
+    });
+  } catch (err) {
+    console.error('AI chatbot support failed. Error:', err.message);
+    res.status(200).json({
+      success: true,
+      data: "AI Chat support is temporarily offline. Please check back shortly or explore our destinations catalog directly.",
+      aiUnavailable: true
+    });
+  }
+});
+
+// @desc    Optimize budget breakdowns
+// @route   POST /api/ai/budget-optimizer
+// @access  Public
+const optimizeBudget = asyncHandler(async (req, res) => {
+  const { destinationId, days, budget, travelers } = req.body;
+
+  if (!destinationId || !days || !budget || !travelers) {
+    res.status(400);
+    throw new Error('Please provide destinationId, days, budget total, and travelers count');
+  }
+
+  const destination = await Destination.findById(destinationId);
+  if (!destination) {
+    res.status(404);
+    throw new Error('Destination not found');
+  }
+
+  try {
+    const prompt = buildBudgetPrompt(destination, Number(days), Number(budget), Number(travelers));
+    const rawText = await generateContent(prompt);
+
+    if (!rawText) {
+      throw new Error('AI budget service returned null');
+    }
+
+    const jsonString = cleanJSONResponse(rawText);
+    const parsed = JSON.parse(jsonString);
+
+    res.status(200).json({
+      success: true,
+      data: parsed,
+      aiUnavailable: false
+    });
+  } catch (err) {
+    console.error('AI Budget optimizer failed. Error:', err.message);
+
+    // Dynamic database calculation fallback summing exactly to budget
+    const numericBudget = Number(budget) || 1000;
+    const fallbackBreakdown = {
+      totalBudget: numericBudget,
+      breakdown: [
+        { category: "Accommodation", percentage: 40, amount: numericBudget * 0.40, description: "Budget friendly hotels and guest houses in the local area." },
+        { category: "Food & Dining", percentage: 25, amount: numericBudget * 0.25, description: "Traditional diners and markets." },
+        { category: "Transport & Transit", percentage: 20, amount: numericBudget * 0.20, description: "Local transport and train passes." },
+        { category: "Sightseeing & Activities", percentage: 15, amount: numericBudget * 0.15, description: "Entrance passes and group guides." }
+      ]
+    };
+
+    res.status(200).json({
+      success: true,
+      data: fallbackBreakdown,
+      aiUnavailable: true,
+      message: 'Budget breakdown generated using default allocation parameters.'
+    });
+  }
+});
+
+// @desc    Packing checklist builder
+// @route   POST /api/ai/packing-list
+// @access  Public
+const generatePackingList = asyncHandler(async (req, res) => {
+  const { destinationId, days, season } = req.body;
+
+  if (!destinationId || !days || !season) {
+    res.status(400);
+    throw new Error('Please provide destinationId, days, and climate/season');
+  }
+
+  const destination = await Destination.findById(destinationId);
+  if (!destination) {
+    res.status(404);
+    throw new Error('Destination not found');
+  }
+
+  try {
+    const prompt = buildPackingListPrompt(destination, Number(days), season);
+    const rawText = await generateContent(prompt);
+
+    if (!rawText) {
+      throw new Error('AI packing service returned null');
+    }
+
+    const jsonString = cleanJSONResponse(rawText);
+    const parsed = JSON.parse(jsonString);
+
+    res.status(200).json({
+      success: true,
+      data: parsed,
+      aiUnavailable: false
+    });
+  } catch (err) {
+    console.error('AI Packing list generator failed. Error:', err.message);
+    const defaultPacking = {
+      categories: [
+        { name: "Documents & Essentials", items: ["Passports & IDs", "Flight and Hotel confirmations", "Debit/Credit cards"] },
+        { name: "Travel Basics", items: ["Weather-appropriate clothing", "Comfortable walking shoes", "Basic toiletries kit"] },
+        { name: "Electronics", items: ["Phone charger", "Universal power adapter plug"] }
+      ]
+    };
+    res.status(200).json({
+      success: true,
+      data: defaultPacking,
+      aiUnavailable: true,
+      message: 'Default packing checklist fallback.'
+    });
+  }
+});
+
+// @desc    Insider travel tips generator
+// @route   POST /api/ai/travel-tips
+// @access  Public
+const generateTravelTips = asyncHandler(async (req, res) => {
+  const { destinationId } = req.body;
+
+  if (!destinationId) {
+    res.status(400);
+    throw new Error('Please provide destinationId');
+  }
+
+  const destination = await Destination.findById(destinationId);
+  if (!destination) {
+    res.status(404);
+    throw new Error('Destination not found');
+  }
+
+  try {
+    const prompt = buildTravelTipsPrompt(destination);
+    const rawText = await generateContent(prompt);
+
+    if (!rawText) {
+      throw new Error('AI travel tips returned null');
+    }
+
+    const jsonString = cleanJSONResponse(rawText);
+    const parsed = JSON.parse(jsonString);
+
+    res.status(200).json({
+      success: true,
+      data: parsed,
+      aiUnavailable: false
+    });
+  } catch (err) {
+    console.error('AI Travel tips generator failed. Error:', err.message);
+    const defaultTips = {
+      tips: [
+        { title: "Local Navigation", description: "Use reputable maps apps and pre-book official airport transfers to avoid taxi scams." },
+        { title: "Culture & Dress Code", description: "Be respectful of local traditions and keep knees and shoulders covered when visiting historical places." }
+      ]
+    };
+    res.status(200).json({
+      success: true,
+      data: defaultTips,
+      aiUnavailable: true,
+      message: 'Showing general travel tips.'
+    });
+  }
+});
+
+// @desc    Admin-only review-grounded FAQ generator
+// @route   POST /api/ai/faq/:destinationId
+// @access  Private/Admin
+const generateDestinationFAQ = asyncHandler(async (req, res) => {
+  const { destinationId } = req.params;
+
+  const destination = await Destination.findById(destinationId);
+  if (!destination) {
+    res.status(404);
+    throw new Error('Destination not found');
+  }
+
+  // Import Review dynamically to avoid circular references if any
+  const Review = require('../models/Review');
+  const reviews = await Review.find({ destinationId });
+
+  try {
+    const prompt = buildFAQPrompt(destination, reviews);
+    const rawText = await generateContent(prompt);
+
+    if (!rawText) {
+      throw new Error('AI FAQ builder returned null');
+    }
+
+    const jsonString = cleanJSONResponse(rawText);
+    const parsed = JSON.parse(jsonString);
+
+    if (!Array.isArray(parsed)) {
+      throw new Error('FAQ output is not a JSON array');
+    }
+
+    // Save and overwrite the FAQ section directly to the destination document
+    destination.faq = parsed;
+    await destination.save();
+
+    res.status(200).json({
+      success: true,
+      data: destination.faq,
+      aiUnavailable: false
+    });
+  } catch (err) {
+    console.error('AI FAQ generator failed. Error:', err.message);
+    res.status(200).json({
+      success: true,
+      data: destination.faq || [],
+      aiUnavailable: true,
+      message: 'FAQ generator is temporarily offline. Existing FAQs (if any) are kept.'
+    });
+  }
+});
+
 module.exports = {
   getRecommendations,
-  generateItineraryPreview
+  generateItineraryPreview,
+  chatSupport,
+  optimizeBudget,
+  generatePackingList,
+  generateTravelTips,
+  generateDestinationFAQ
 };

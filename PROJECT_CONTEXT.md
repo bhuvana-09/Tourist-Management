@@ -16,7 +16,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Coupons**: **Completed** (Database model, validator middleware, validation-preview endpoint, and admin coupons manager finished in Sprint 9)
 - **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
 - **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
-- **AI**: **Completed** (Gemini API SDK wrappers, custom timeouts & retries, raw JSON cleaners, personalized grounding validations, recommendation strips, and schedule generators finished in Sprint 12)
+- **AI**: **Completed** (Gemini client SDK wrapper, try-once retry handlers, personalized recommendations grounding, day itineraries planner, site-wide rate-limited travel chatbot support, packing list builder, budget breakdowns optimizer, travel tips, and admin review-grounded FAQ generator completed in Sprint 13)
 
 ## Current APIs
 
@@ -85,10 +85,15 @@ This document provides an overview of the architecture, data models, API endpoin
 #### AI Endpoints
 - `POST /api/ai/recommendations` - Retrieve personalized destination recommendations grounded in booking history (Authenticated User)
 - `POST /api/ai/itinerary` - Generate day-by-day sightseeing itinerary preview for a destination (Public)
+- `POST /api/ai/chat` - Travel Q&A chatbot support (Public, rate-limited to 15 requests per 15 mins)
+- `POST /api/ai/budget-optimizer` - Dynamic trip category cost breakdown distribution planner (Public)
+- `POST /api/ai/packing-list` - Duration & season tailored travel checklists builder (Public)
+- `POST /api/ai/travel-tips` - Insider travel guidelines safety tips (Public)
+- `POST /api/ai/faq/:destinationId` - Admin-only review-grounded FAQ editor generator (Admin Only)
 
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 13: Chatbot, Optimization, and Travel Assistants**
-  - Build additional AI capabilities: FAQ generators, budget optimizers, packing checklist builders, and interactive support chatbots.
+- **Sprint 14: AI Review Summarizer**
+  - Build AI-powered review text analyzers for sentiment assessment and destination summaries compilation.

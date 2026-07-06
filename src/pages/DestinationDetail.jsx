@@ -23,6 +23,31 @@ export default function DestinationDetail() {
   // Active picture gallery slide
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
+  // FAQ states
+  const [faqLoading, setFaqLoading] = useState(false);
+  const [faqError, setFaqError] = useState("");
+
+  const handleRegenerateFAQ = async () => {
+    setFaqLoading(true);
+    setFaqError("");
+    try {
+      const res = await api.post(`/ai/faq/${id}`);
+      if (res.aiUnavailable) {
+        setFaqError(res.message || "Failed to generate FAQs.");
+      } else {
+        setDestination((prev) => ({
+          ...prev,
+          faq: res.data
+        }));
+      }
+    } catch (err) {
+      console.error("FAQ regeneration failed:", err);
+      setFaqError("Failed to connect to the FAQ service.");
+    } finally {
+      setFaqLoading(false);
+    }
+  };
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -230,6 +255,61 @@ export default function DestinationDetail() {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="border-t border-slate-100 pt-12 space-y-6 animate-fade">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
+            <p className="text-sm text-slate-500">Grounded insights compiled by our AI agent based on local reviews.</p>
+          </div>
+          {user?.role === "admin" && (
+            <button
+              onClick={handleRegenerateFAQ}
+              disabled={faqLoading}
+              className="btn-secondary py-2 px-4 text-xs font-semibold flex items-center gap-2 border-blue-100 text-blue-600 hover:bg-blue-50"
+            >
+              {faqLoading ? (
+                <>
+                  <svg className="animate-spin h-3.5 w-3.5 text-blue-650" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Regenerating FAQ...
+                </>
+              ) : (
+                "🔄 Regenerate FAQ"
+              )}
+            </button>
+          )}
+        </div>
+
+        {faqError && (
+          <div className="bg-red-50 text-red-700 border border-red-200 p-3 rounded-xl text-xs">
+            {faqError}
+          </div>
+        )}
+
+        {!destination.faq || destination.faq.length === 0 ? (
+          <div className="p-8 border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-sm">
+            No FAQs available for this destination. {user?.role === "admin" && "Click Regenerate FAQ to build them using AI."}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {destination.faq.map((item, idx) => (
+              <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100/60 space-y-2">
+                <h4 className="font-bold text-slate-800 text-xs flex gap-2">
+                  <span className="text-blue-600 font-extrabold">Q:</span>
+                  {item.question}
+                </h4>
+                <p className="text-[11px] text-slate-600 leading-relaxed pl-4">
+                  {item.answer}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Review Section */}

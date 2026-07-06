@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import AIChatWidget from "./components/AIChatWidget";
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -100,6 +101,7 @@ export default function App() {
           </main>
 
           <Footer />
+          <AIChatWidget />
         </div>
       </AuthProvider>
     </BrowserRouter>
