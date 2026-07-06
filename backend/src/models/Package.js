@@ -1,16 +1,20 @@
 const mongoose = require('mongoose');
 
-const destinationSchema = new mongoose.Schema(
+const packageSchema = new mongoose.Schema(
   {
-    name: {
+    packageName: {
       type: String,
-      required: [true, 'Destination name is required'],
+      required: [true, 'Package name is required'],
       unique: true,
       trim: true
     },
-    location: {
+    price: {
+      type: Number,
+      required: [true, 'Price is required']
+    },
+    duration: {
       type: String,
-      required: [true, 'Location is required'],
+      required: [true, 'Duration is required'],
       trim: true
     },
     description: {
@@ -22,6 +26,10 @@ const destinationSchema = new mongoose.Schema(
       type: String,
       trim: true,
       default: ''
+    },
+    destinationName: {
+      type: String,
+      trim: true
     }
   },
   {
@@ -30,12 +38,12 @@ const destinationSchema = new mongoose.Schema(
 );
 
 // Virtual property 'id' to map MongoDB '_id' to 'id' for the frontend
-destinationSchema.virtual('id').get(function () {
+packageSchema.virtual('id').get(function () {
   return this._id.toHexString();
 });
 
 // Ensure virtual fields are serialized
-destinationSchema.set('toJSON', {
+packageSchema.set('toJSON', {
   virtuals: true,
   transform: (doc, ret) => {
     ret.id = ret._id.toString();
@@ -45,4 +53,4 @@ destinationSchema.set('toJSON', {
   }
 });
 
-module.exports = mongoose.model('Destination', destinationSchema);
+module.exports = mongoose.model('Package', packageSchema);

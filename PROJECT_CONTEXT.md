@@ -9,9 +9,9 @@ This document provides an overview of the architecture, data models, API endpoin
 
 ## Resource Migration Status
 - **Destinations**: **Completed** (Migrated to Node.js/Express + MongoDB Atlas in Sprint 1)
-- **Packages**: **Pending** (Serviced by JSON-Server at port 3000)
-- **Itineraries**: **Pending** (Serviced by JSON-Server at port 3000)
-- **Bookings**: **Pending** (Serviced by JSON-Server at port 3000)
+- **Packages**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
+- **Itineraries**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
+- **Bookings**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
 
 ## Current APIs
 
@@ -29,7 +29,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET/POST/PUT/PATCH/DELETE /bookings`
 
 ## Next Sprint Goal
-- **Sprint 2: Data Migration**
-  - Migrate the Packages resource to Express + MongoDB.
-  - Setup schema references between Packages and Destinations.
-  - Implement a data migration script to populate MongoDB from the existing `db.json` file.
+- **Sprint 3: Auth Backend**
+  - Implement real JWT authentication backend.
+  - Setup login/signup routes.
+  - Replace temporary client-side auth with secure, server-side JWT auth.

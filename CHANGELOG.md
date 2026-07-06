@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 2] - 2026-07-06
+### Added
+- Created Mongoose models for Packages, Itineraries, and Bookings.
+- Added a unique index to the `name` field in the Destination model.
+- Wrote an idempotent data migration seed script `backend/scripts/seed.js` that:
+  - Validates Destinations for duplicate names before executing.
+  - Upserts Destinations and Packages.
+  - Migrates Itineraries and Bookings from `db.json`, converting their legacy name-string references (`destinationName`, `packageName`) into proper MongoDB `ObjectId` references (`destinationId`, `packageId`).
+  - Gracefully handles mismatches by logging warnings and skipping records.
+  - Outputs a clear, structured summary of operations.
+- Added a `"seed"` shortcut script to `backend/package.json`.
+
+### Fixed
+- Migrated name-string database references to ObjectIds in the database.
+
+---
+
 ## [Sprint 1] - 2026-07-06
 ### Added
 - Created Node.js + Express backend infrastructure in `backend/` folder.
@@ -27,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated root `.gitignore` to prevent committing `backend/.env` and `backend/node_modules`.
 
 ### Known Issues
-- Itineraries and bookings still reference other records by name strings rather than database object IDs (known technical debt, scheduled for Sprint 2 migration).
+- None.
 
 ---
 
