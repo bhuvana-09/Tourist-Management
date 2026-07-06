@@ -1,28 +1,48 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useParams, useSearchParams, Link, useNavigate } from "react-router-dom";
+import { backendApi } from "../api/axiosInstance";
 
-export default function Login() {
+export default function ResetPassword() {
+  const params = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
+
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
+  const token = params.token || searchParams.get("token");
+
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
+
+    if (!token) {
+      return setError("Invalid or missing reset token.");
+    }
+
+    if (password !== confirmPassword) {
+      return setError("Passwords do not match.");
+    }
+
     setLoading(true);
 
     try {
-      await login(email, password);
-      navigate("/");
+      const res = await backendApi.post(`/auth/reset-password/${token}`, { password });
+      setSuccess(res.message || "Your password has been successfully reset!");
+      setPassword("");
+      setConfirmPassword("");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (err) {
-      console.error("Login failed:", err);
-      // Grab error message from backend response if available
-      const message = err.response?.data?.message || err.message || "Invalid login credentials. Try again.";
-      setError(message);
+      console.error("Password reset failed:", err);
+      const errMessage = err.response?.data?.message || err.message || "Failed to reset password. The link may have expired.";
+      setError(errMessage);
     } finally {
       setLoading(false);
     }
@@ -32,54 +52,46 @@ export default function Login() {
     <div className="flex justify-center items-center min-h-[calc(100vh-200px)] py-12 px-4 animate-fade">
       <div className="w-full max-w-md">
         <form
-          onSubmit={handleLogin}
+          onSubmit={handleResetPassword}
           className="bg-white p-8 rounded-2xl shadow-2xl space-y-6"
         >
           <div className="text-center space-y-2">
             <h2 className="text-3xl font-bold text-slate-900">
-              Welcome Back
+              New Password
             </h2>
             <p className="text-sm text-slate-600">
-              Login to Tourist Management System
+              Create a new secure password for your account
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Email
+                New Password
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input-field"
-                placeholder="Enter your email"
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-semibold text-slate-700">
-                  Password
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-500"
-                >
-                  Forgot password?
-                </Link>
-              </div>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field"
-                placeholder="Enter your password"
+                placeholder="Enter new password"
                 required
-                disabled={loading}
+                disabled={loading || !!success}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="input-field"
+                placeholder="Re-enter new password"
+                required
+                disabled={loading || !!success}
               />
             </div>
 
@@ -88,12 +100,18 @@ export default function Login() {
                 {error}
               </div>
             )}
+
+            {success && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+                {success} Redirecting to login in 3 seconds...
+              </div>
+            )}
           </div>
 
           <button
             type="submit"
             className="w-full btn-primary py-3 text-base font-semibold"
-            disabled={loading}
+            disabled={loading || !!success}
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -101,19 +119,12 @@ export default function Login() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Logging in...
+                Resetting...
               </span>
             ) : (
-              "Login"
+              "Reset Password"
             )}
           </button>
-
-          <p className="text-sm text-center text-slate-600">
-            Don't have an account?{" "}
-            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-500">
-              Register here
-            </Link>
-          </p>
         </form>
       </div>
     </div>

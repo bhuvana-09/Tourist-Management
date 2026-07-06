@@ -30,6 +30,14 @@ const userSchema = new mongoose.Schema(
     refreshTokenHash: {
       type: String,
       default: null
+    },
+    resetTokenHash: {
+      type: String,
+      default: null
+    },
+    resetTokenExpiry: {
+      type: Date,
+      default: null
     }
   },
   {
@@ -51,6 +59,8 @@ userSchema.set('toJSON', {
     delete ret.__v;
     delete ret.passwordHash;
     delete ret.refreshTokenHash;
+    delete ret.resetTokenHash;
+    delete ret.resetTokenExpiry;
     return ret;
   }
 });

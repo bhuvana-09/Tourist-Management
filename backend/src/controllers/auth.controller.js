@@ -16,6 +16,7 @@
  *    compromised, attackers cannot retrieve the raw refresh token string to forge access sessions.
  */
 
+const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const asyncHandler = require('../utils/asyncHandler');
@@ -301,11 +302,101 @@ const getMe = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Request password reset
+// @route   POST /api/auth/forgot-password
+// @access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(400);
+    throw new Error('Please provide email');
+  }
+
+  // We always return success, but only send email if user exists (no user enumeration)
+  const genericResponse = {
+    success: true,
+    data: { message: 'If that email address exists, we have sent a password reset link to it.' }
+  };
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(200).json(genericResponse);
+  }
+
+  // Generate reset token
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+  const resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+  user.resetTokenHash = resetTokenHash;
+  user.resetTokenExpiry = resetTokenExpiry;
+  await user.save();
+
+  // Send email
+  const resetUrl = `${CLIENT_URL}/reset-password?token=${resetToken}`;
+
+  try {
+    const resetEmailTemplate = require('../templates/resetPasswordEmail');
+    await sendEmail({
+      to: user.email,
+      subject: 'Reset your password - Tourist Portal',
+      html: resetEmailTemplate(resetUrl, user.name)
+    });
+  } catch (emailError) {
+    console.error(`Failed to send password reset email: ${emailError.message}`);
+  }
+
+  res.status(200).json(genericResponse);
+});
+
+// @desc    Reset password
+// @route   POST /api/auth/reset-password/:token
+// @access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  if (!password) {
+    res.status(400);
+    throw new Error('Please provide new password');
+  }
+
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  const user = await User.findOne({
+    resetTokenHash: hashedToken,
+    resetTokenExpiry: { $gt: Date.now() }
+  });
+
+  if (!user) {
+    res.status(400);
+    throw new Error('Invalid or expired reset token');
+  }
+
+  // Update password
+  const salt = await bcrypt.genSalt(12);
+  user.passwordHash = await bcrypt.hash(password, salt);
+  
+  // Invalidate reset token and refresh tokens
+  user.resetTokenHash = null;
+  user.resetTokenExpiry = null;
+  user.refreshTokenHash = null; // log out of all devices
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    data: { message: 'Password has been reset successfully. You can now log in.' }
+  });
+});
+
 module.exports = {
   register,
   verifyEmail,
   login,
   refresh,
   logout,
-  getMe
+  getMe,
+  forgotPassword,
+  resetPassword
 };

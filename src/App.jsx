@@ -5,6 +5,8 @@ import Footer from "./components/Footer";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import VerifyEmail from "./pages/VerifyEmail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/Home";
 import Destinations from "./pages/Destinations";
 import Packages from "./pages/Packages";
@@ -34,11 +36,24 @@ export default function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/verify-email" element={<VerifyEmail />} />
               <Route path="/verify-email/:token" element={<VerifyEmail />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
 
               <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
               <Route path="/destinations" element={<ProtectedRoute><Destinations /></ProtectedRoute>} />
-              <Route path="/destinations/add" element={<ProtectedRoute><AddDestination /></ProtectedRoute>} />
-              <Route path="/destinations/edit/:id" element={<ProtectedRoute><EditDestination /></ProtectedRoute>} />
+              
+              {/* Write Destination routes gated for admin role only */}
+              <Route path="/destinations/add" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddDestination />
+                </ProtectedRoute>
+              } />
+              <Route path="/destinations/edit/:id" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <EditDestination />
+                </ProtectedRoute>
+              } />
 
               <Route path="/packages" element={<ProtectedRoute><Packages /></ProtectedRoute>} />
               <Route path="/packages/add" element={<ProtectedRoute><AddPackage /></ProtectedRoute>} />

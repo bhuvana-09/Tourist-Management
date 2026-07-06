@@ -6,7 +6,9 @@ const {
   login,
   refresh,
   logout,
-  getMe
+  getMe,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/auth.controller');
 const authenticate = require('../middlewares/authenticate');
 
@@ -15,6 +17,8 @@ router.get('/verify-email/:token', verifyEmail);
 router.post('/login', login);
 router.post('/refresh', refresh);
 router.post('/logout', logout);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password/:token', resetPassword);
 router.get('/me', authenticate, getMe);
 
 module.exports = router;

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 5] - 2026-07-06
+### Added
+- Created `ForgotPassword` interface [ForgotPassword.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/ForgotPassword.jsx) to request a password reset email.
+- Created `ResetPassword` interface [ResetPassword.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/ResetPassword.jsx) supporting password change requests utilizing verification tokens.
+- Created reset password HTML email template in [resetPasswordEmail.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/templates/resetPasswordEmail.js).
+- Added `forgotPassword` and `resetPassword` controller handlers inside [auth.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/auth.controller.js) with generic success responses (preventing user enumeration) and hashing validation.
+- Registered `/forgot-password` and `/reset-password` endpoints under `/api/auth` in backend routes.
+- Registered `/forgot-password` and `/reset-password` routes on the frontend in `App.jsx`.
+
+### Changed
+- Extended backend `User` schema in [User.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/User.js) to store hashed reset tokens and expiration timestamps.
+- Secured backend Destination write routes (`POST`, `PUT`, `PATCH`, `DELETE`) in [destination.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/destination.routes.js) with `authenticate` and `authorize('admin')` middlewares, while leaving GET requests public.
+- Wrapped frontend `/destinations/add` and `/destinations/edit/:id` routes in [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx) with role verification (`roles={['admin']}`).
+- Conditionalized Add, Edit, and Delete action button displays inside [Destinations.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Destinations.jsx) based on admin credentials.
+- Added link to forgot password screen in [Login.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Login.jsx).
+
+---
+
 ## [Sprint 4] - 2026-07-06
 ### Added
 - Created `AuthContext` to manage in-memory user and token states, exposing login, register, and logout operations.
