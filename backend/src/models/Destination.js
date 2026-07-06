@@ -18,11 +18,24 @@ const destinationSchema = new mongoose.Schema(
       required: [true, 'Description is required'],
       trim: true
     },
-    image: {
-      type: String,
-      trim: true,
-      default: ''
-    }
+    images: [
+      {
+        url: {
+          type: String,
+          required: true
+        },
+        publicId: {
+          type: String,
+          default: null
+        }
+      }
+    ],
+    tags: [
+      {
+        type: String,
+        trim: true
+      }
+    ]
   },
   {
     timestamps: true

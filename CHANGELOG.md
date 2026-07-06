@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 6] - 2026-07-06
+### Added
+- Configured Cloudinary settings inside [cloudinary.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/config/cloudinary.js).
+- Configured Multer memory-storage and file filter middlewares inside [upload.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/middlewares/upload.js) with 5MB limits and MIME type gating.
+- Created idempotent data migration script [migrateDestinationImages.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/scripts/migrateDestinationImages.js) to convert legacy database objects to support the new array images structure.
+- Implemented query pagination, case-insensitive partial searches, locations filtering, and tag intersections in the GET `/api/destinations` controller handler.
+
+### Changed
+- Migrated legacy `image` schema field to `images` array of objects (retaining url and publicId details) and added optional `tags` array inside the Destination model [Destination.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Destination.js).
+- Updated [AddDestination.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddDestination.jsx) and [EditDestination.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/EditDestination.jsx) to support file upload inputs and parse multipart `FormData` submissions.
+- Refactored [Destinations.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Destinations.jsx) to render dynamic images directly from API parameters and add search inputs, location inputs, sort selectors, and pagination controls.
+- Adjusted Axios response interceptors in [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) to preserve response metadata alongside data arrays.
+
+### Removed
+- Retired legacy hardcoded per-city city-to-image lookups map in the frontend.
+
+---
+
 ## [Sprint 5] - 2026-07-06
 ### Added
 - Created `ForgotPassword` interface [ForgotPassword.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/ForgotPassword.jsx) to request a password reset email.

@@ -9,6 +9,10 @@
  *    POST, PUT, PATCH, and DELETE operations require a valid authentication token (via authenticate middleware)
  *    and must belong to an account with the 'admin' role (via authorize('admin') middleware).
  *    This secures write actions server-side.
+ * 
+ * 3. Multer Image Parsing:
+ *    For POST, PUT, and PATCH routes, we mount the `upload.single('image')` middleware. This parses
+ *    incoming `multipart/form-data` uploads and populates `req.file` with the image buffer.
  */
 
 const express = require('express');
@@ -23,15 +27,16 @@ const {
 
 const authenticate = require('../middlewares/authenticate');
 const authorize = require('../middlewares/authorize');
+const upload = require('../middlewares/upload');
 
 router.route('/')
   .get(getDestinations)
-  .post(authenticate, authorize('admin'), createDestination);
+  .post(authenticate, authorize('admin'), upload.single('image'), createDestination);
 
 router.route('/:id')
   .get(getDestinationById)
-  .put(authenticate, authorize('admin'), updateDestination)
-  .patch(authenticate, authorize('admin'), updateDestination)
+  .put(authenticate, authorize('admin'), upload.single('image'), updateDestination)
+  .patch(authenticate, authorize('admin'), upload.single('image'), updateDestination)
   .delete(authenticate, authorize('admin'), deleteDestination);
 
 module.exports = router;

@@ -43,7 +43,11 @@ const onRefreshed = (newToken) => {
 backendApi.interceptors.response.use(
   (response) => {
     if (response.data && response.data.success === true && response.data.data !== undefined) {
-      response.data = response.data.data;
+      if (response.data.meta !== undefined) {
+        response.data = { data: response.data.data, meta: response.data.meta };
+      } else {
+        response.data = response.data.data;
+      }
     }
     return response;
   },
