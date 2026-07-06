@@ -1,15 +1,12 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
+  const { user, logout } = useAuth();
+  const isLoggedIn = !!user;
   const [open, setOpen] = useState(false);
-
-  const logout = () => {
-    localStorage.removeItem("isLoggedIn");
-    navigate("/login");
-  };
 
   const navLinkClass = ({ isActive }) =>
     `px-3 py-1 rounded-full text-sm font-medium transition-colors ${

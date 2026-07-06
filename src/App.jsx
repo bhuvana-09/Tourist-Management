@@ -3,6 +3,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import VerifyEmail from "./pages/VerifyEmail";
 import Home from "./pages/Home";
 import Destinations from "./pages/Destinations";
 import Packages from "./pages/Packages";
@@ -17,37 +19,43 @@ import EditPackage from "./pages/EditPackage";
 import EditItinerary from "./pages/EditItinerary";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/login" element={<Login />} />
+      <AuthProvider>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
+              <Route path="/verify-email/:token" element={<VerifyEmail />} />
 
-            <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-            <Route path="/destinations" element={<ProtectedRoute><Destinations /></ProtectedRoute>} />
-            <Route path="/destinations/add" element={<ProtectedRoute><AddDestination /></ProtectedRoute>} />
-            <Route path="/destinations/edit/:id" element={<ProtectedRoute><EditDestination /></ProtectedRoute>} />
+              <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+              <Route path="/destinations" element={<ProtectedRoute><Destinations /></ProtectedRoute>} />
+              <Route path="/destinations/add" element={<ProtectedRoute><AddDestination /></ProtectedRoute>} />
+              <Route path="/destinations/edit/:id" element={<ProtectedRoute><EditDestination /></ProtectedRoute>} />
 
-            <Route path="/packages" element={<ProtectedRoute><Packages /></ProtectedRoute>} />
-            <Route path="/packages/add" element={<ProtectedRoute><AddPackage /></ProtectedRoute>} />
-            <Route path="/packages/edit/:id" element={<ProtectedRoute><EditPackage /></ProtectedRoute>} />
+              <Route path="/packages" element={<ProtectedRoute><Packages /></ProtectedRoute>} />
+              <Route path="/packages/add" element={<ProtectedRoute><AddPackage /></ProtectedRoute>} />
+              <Route path="/packages/edit/:id" element={<ProtectedRoute><EditPackage /></ProtectedRoute>} />
 
-            <Route path="/itineraries" element={<ProtectedRoute><Itineraries /></ProtectedRoute>} />
-            <Route path="/itineraries/add" element={<ProtectedRoute><AddItinerary /></ProtectedRoute>} />
-            <Route path="/itineraries/edit/:id" element={<ProtectedRoute><EditItinerary /></ProtectedRoute>} />
+              <Route path="/itineraries" element={<ProtectedRoute><Itineraries /></ProtectedRoute>} />
+              <Route path="/itineraries/add" element={<ProtectedRoute><AddItinerary /></ProtectedRoute>} />
+              <Route path="/itineraries/edit/:id" element={<ProtectedRoute><EditItinerary /></ProtectedRoute>} />
 
-            <Route path="/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
-            <Route path="/bookings/add" element={<ProtectedRoute><AddBooking /></ProtectedRoute>} />
-          </Routes>
-        </main>
+              <Route path="/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
+              <Route path="/bookings/add" element={<ProtectedRoute><AddBooking /></ProtectedRoute>} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
+          <Footer />
+        </div>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

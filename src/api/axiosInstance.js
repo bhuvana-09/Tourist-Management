@@ -7,9 +7,39 @@ const api = axios.create({
 
 export const backendApi = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api",
+  withCredentials: true,
 });
 
-// Interceptor to automatically unwrap the consistent { success: true, data } response
+let token = null;
+
+export const setAuthToken = (newToken) => {
+  token = newToken;
+};
+
+// Request Interceptor: Attach bearer access token to requests
+backendApi.interceptors.request.use(
+  (config) => {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+// Response Interceptor: unwrap { success: true, data } and automatically refresh token on 401
+let isRefreshing = false;
+let refreshSubscribers = [];
+
+const subscribeTokenRefresh = (cb) => {
+  refreshSubscribers.push(cb);
+};
+
+const onRefreshed = (newToken) => {
+  refreshSubscribers.forEach((cb) => cb(newToken));
+  refreshSubscribers = [];
+};
+
 backendApi.interceptors.response.use(
   (response) => {
     if (response.data && response.data.success === true && response.data.data !== undefined) {
@@ -17,9 +47,52 @@ backendApi.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Check if error is 401 and it's not a retry already
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      // Avoid infinite loop if refreshing endpoint itself returns 401
+      if (originalRequest.url.includes("/auth/refresh")) {
+        return Promise.reject(error);
+      }
+
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          subscribeTokenRefresh((newToken) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`;
+            resolve(backendApi(originalRequest));
+          });
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const res = await axios.post(
+          (import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api") + "/auth/refresh",
+          {},
+          { withCredentials: true }
+        );
+        
+        const newAccessToken = res.data.data.accessToken;
+        
+        setAuthToken(newAccessToken);
+        onRefreshed(newAccessToken);
+        isRefreshing = false;
+
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return backendApi(originalRequest);
+      } catch (refreshError) {
+        isRefreshing = false;
+        setAuthToken(null);
+        window.dispatchEvent(new Event("auth-logout"));
+        return Promise.reject(refreshError);
+      }
+    }
     return Promise.reject(error);
   }
 );
 
-export default api;
+export default api;

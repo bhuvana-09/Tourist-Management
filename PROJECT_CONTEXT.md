@@ -8,7 +8,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations` and `Auth`.
 
 ## Resource Migration Status
-- **Auth**: **Completed** (JWT-based backend auth completed in Sprint 3; frontend integration pending in Sprint 4)
+- **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4)
 - **Destinations**: **Completed** (Migrated to Node.js/Express + MongoDB Atlas in Sprint 1)
 - **Packages**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
 - **Itineraries**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
@@ -39,6 +39,6 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET/POST/PUT/PATCH/DELETE /bookings`
 
 ## Next Sprint Goal
-- **Sprint 4: Auth Frontend**
-  - Replace the temporary localStorage authentication stub in the frontend with secure JWT token storage (in-memory state) and cookie management.
-  - Wire up authentication routes, ProtectedRoutes, Navbar state, and registration/login screens to the backend endpoints.
+- **Sprint 5: Password Reset & Roles**
+  - Implement request password reset and reset password flow (endpoints + frontend screens).
+  - Enforce user authorization rules (roles based: admin only) on specific routes and interfaces.

@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 4] - 2026-07-06
+### Added
+- Created `AuthContext` to manage in-memory user and token states, exposing login, register, and logout operations.
+- Implemented registration interface [Register.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Register.jsx) allowing users to sign up and triggers email dispatch.
+- Implemented email verification interface [VerifyEmail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/VerifyEmail.jsx) reading verification tokens via URL paths or query parameters.
+- Mounted `/register` and `/verify-email` routes in [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx).
+
+### Changed
+- Refactored Axios instances [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js):
+  - Configured `withCredentials: true` globally for backend operations.
+  - Attached request interceptor adding `Authorization: Bearer <accessToken>` headers.
+  - Attached response interceptor resolving 401 errors through automatic token refresh retries.
+- Refactored [ProtectedRoute.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/auth/ProtectedRoute.jsx) to consume authorization parameters from `AuthContext` and support optional roles validation.
+- Updated [Login.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Login.jsx) and [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/Navbar.jsx) to consume context properties.
+
+### Removed
+- Retired legacy `localStorage`-based fake authentication stub.
+
+---
+
 ## [Sprint 3] - 2026-07-06
 ### Added
 - Created `User` Mongoose data model with secure `passwordHash` and `refreshTokenHash` properties.
