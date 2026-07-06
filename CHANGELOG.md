@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 3] - 2026-07-06
+### Added
+- Created `User` Mongoose data model with secure `passwordHash` and `refreshTokenHash` properties.
+- Implemented backend auth routes:
+  - `POST /api/auth/register` (creates user, hashes password with `bcrypt` (12 rounds), triggers verification email).
+  - `GET /api/auth/verify-email/:token` (resolves token and verifies user email).
+  - `POST /api/auth/login` (checks password, issues short-lived JWT access token in response body and sets a secure httpOnly `refreshToken` cookie).
+  - `POST /api/auth/refresh` (issues a new access token from valid refresh cookie).
+  - `POST /api/auth/logout` (invalidates database session hash and clears cookie).
+  - `GET /api/auth/me` (profile endpoint protected by token authentication).
+- Created token utilities `signAccessToken`, `signRefreshToken`, `verifyAccessToken`, `verifyRefreshToken`, and verification token helpers in `backend/src/utils/token.js`.
+- Created email utility helper using Nodemailer with SMTP config in `backend/src/utils/email.js` and an HTML verification template in `backend/src/templates/verifyEmail.js`.
+- Implemented reusable middleware `authenticate` (bearer token validation) and `authorize` (roles validation).
+- Integrated manual cookie parsing inside controllers to read cookies without adding unlisted package dependencies.
+- Registered auth routes under `/api/auth` in `backend/src/app.js`.
+
+---
+
 ## [Sprint 2] - 2026-07-06
 ### Added
 - Created Mongoose models for Packages, Itineraries, and Bookings.
