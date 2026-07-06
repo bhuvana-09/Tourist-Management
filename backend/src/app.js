@@ -29,6 +29,7 @@ const packageRoutes = require('./routes/package.routes');
 const itineraryRoutes = require('./routes/itinerary.routes');
 const bookingRoutes = require('./routes/booking.routes');
 const couponRoutes = require('./routes/coupon.routes');
+const paymentRoutes = require('./routes/payment.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
@@ -62,6 +63,7 @@ app.use('/api/packages', packageRoutes);
 app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/coupons', couponRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // 404 handler
 app.use(notFound);

@@ -184,6 +184,9 @@ const cancelBooking = asyncHandler(async (req, res) => {
   }
 
   booking.status = 'cancelled';
+  if (booking.paymentStatus === 'paid') {
+    booking.paymentStatus = 'refunded';
+  }
   await booking.save();
 
   const populated = await Booking.findById(booking._id)

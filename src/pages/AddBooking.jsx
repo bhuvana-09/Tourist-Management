@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import { triggerRazorpayCheckout } from "../utils/payment";
 
 const bookingValidationSchema = z.object({
   packageId: z.string().min(1, "Please select a travel package"),
@@ -112,15 +113,24 @@ export default function AddBooking() {
     };
 
     api.post("/bookings", payload)
-      .then(() => {
-        alert("Booking created successfully!");
-        navigate("/my-bookings");
+      .then((booking) => {
+        // Immediately open Razorpay sandbox checkout overlay
+        triggerRazorpayCheckout(
+          booking.id,
+          user,
+          (verifiedBooking) => {
+            alert("Payment verified! Booking confirmed successfully!");
+            navigate("/my-bookings");
+          },
+          (paymentError) => {
+            alert(paymentError);
+            navigate("/my-bookings"); // Go to list so they can pay later
+          }
+        );
       })
       .catch((err) => {
         console.error("Failed to create booking:", err);
         setError(err.response?.data?.message || err.message || "Failed to create booking");
-      })
-      .finally(() => {
         setLoading(false);
       });
   };

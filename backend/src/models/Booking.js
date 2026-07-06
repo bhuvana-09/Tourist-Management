@@ -50,6 +50,15 @@ const bookingSchema = new mongoose.Schema(
       ref: 'Coupon',
       required: false,
       default: null
+    },
+    paymentStatus: {
+      type: String,
+      enum: ['unpaid', 'paid', 'refunded'],
+      default: 'unpaid'
+    },
+    paymentRef: {
+      type: String,
+      default: null
     }
   },
   {

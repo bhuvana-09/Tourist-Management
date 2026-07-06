@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 10] - 2026-07-06
+### Added
+- Installed `razorpay` backend SDK dependency.
+- Created [razorpay.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/config/razorpay.js) backend initialization helper.
+- Created [payment.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/payment.controller.js) and [payment.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/payment.routes.js) containing order generation (`POST /api/payments/create-order`) and signature verification (`POST /api/payments/verify`) using HMAC-SHA256.
+- Created [payment.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/utils/payment.js) utility on the frontend to manage the Razorpay checkout overlay.
+- Added `VITE_RAZORPAY_KEY_ID` to root `.env` config.
+- Loaded Razorpay CDN library in [index.html](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/index.html).
+
+### Changed
+- Modified [Booking.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Booking.js) model to contain `paymentStatus` and `paymentRef`.
+- Updated [booking.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/booking.controller.js) to flag paid reservations as `refunded` when cancelled.
+- Gated axios interceptor configs in [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) to switch url targets for `/payments`.
+- Modified [AddBooking.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddBooking.jsx) to automatically pop open Razorpay checkout modal immediately after checkout submits.
+- Modified [MyBookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/MyBookings.jsx) to display payment badges and render a retry "Pay Now" option for unpaid pending transactions.
+
+---
+
 ## [Sprint 9] - 2026-07-06
 ### Added
 - Created backend Coupon model [Coupon.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Coupon.js) storing code, discountPercent, expiryDate, and usage counts.

@@ -5,7 +5,7 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, and `Coupons`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, and `Payments`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
@@ -14,6 +14,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Itineraries**: **Completed** (CRUD API and dropdown destination select validations finished in Sprint 7. Retired legacy free-text location entry)
 - **Bookings**: **Completed** (CRUD API, RHF/Zod checkout validation, and status lifecycle cancellation flow finished in Sprint 9)
 - **Coupons**: **Completed** (Database model, validator middleware, validation-preview endpoint, and admin coupons manager finished in Sprint 9)
+- **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
 
 ## Current APIs
 
@@ -69,10 +70,14 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET /api/coupons` - List all coupons (Admin Only)
 - `POST /api/coupons` - Create a new coupon code (Admin Only)
 
+#### Payments Endpoints
+- `POST /api/payments/create-order` - Generate Razorpay transaction order (Authenticated Booking Owner)
+- `POST /api/payments/verify` - Strictly verify HMAC-SHA256 signature and update booking indicators (Authenticated Booking Owner)
+
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 10: Payments (Sandbox)**
-  - Integrate a sandbox payment flow (simulated credit card/UPI checkout) at checkout.
-  - Successful checkout payments transition booking status from `pending` to `confirmed`.
+- **Sprint 11: Reviews & Ratings**
+  - Implement a destination review/rating system where registered users can post feedbacks.
+  - Show average ratings dynamically on the Destinations catalog.
