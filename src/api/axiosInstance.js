@@ -8,7 +8,12 @@ const api = axios.create({
 // Dynamic Instance-Switching Interceptors for Packages & Itineraries
 api.interceptors.request.use(
   (config) => {
-    if (config.url && (config.url.startsWith("/packages") || config.url.startsWith("/itineraries") || config.url.startsWith("/destinations"))) {
+    if (config.url && (
+      config.url.startsWith("/packages") || 
+      config.url.startsWith("/itineraries") || 
+      config.url.startsWith("/destinations") ||
+      config.url.startsWith("/bookings")
+    )) {
       config.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
       config.withCredentials = true;
       if (token) {
@@ -23,7 +28,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     const url = response.config.url || "";
-    if (url.includes("/packages") || url.includes("/itineraries") || url.includes("/destinations")) {
+    if (
+      url.includes("/packages") || 
+      url.includes("/itineraries") || 
+      url.includes("/destinations") ||
+      url.includes("/bookings")
+    ) {
       if (response.data && response.data.success === true && response.data.data !== undefined) {
         if (response.data.meta !== undefined) {
           response.data = { data: response.data.data, meta: response.data.meta };

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 8] - 2026-07-06
+### Added
+- Installed frontend form and schema validation dependencies `react-hook-form`, `zod`, and `@hookform/resolvers`.
+- Created backend booking controller [booking.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/booking.controller.js) and routing [booking.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/booking.routes.js) to support authenticated creation, personal history listing, and owner/admin authorization checks.
+- Created user booking history interface [MyBookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/MyBookings.jsx) fetching from `/api/bookings/me`.
+
+### Changed
+- Added optional `userId` ObjectId reference to the Booking model [Booking.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Booking.js) for schema compatibility.
+- Mounted `/api/bookings` route inside backend [app.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/app.js).
+- Extended Axios interceptors in [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) to dynamically switch instances and parse metadata for Bookings.
+- Rewrote booking form page [AddBooking.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddBooking.jsx) to utilize `react-hook-form` and `zod` resolver validations, auto-filling name/email from session context and checking travel date ranges.
+- Repurposed bookings overview page [Bookings.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Bookings.jsx) as an admin-only portal that displays legacy guest checkouts and registered accounts.
+- Updated [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx) routes to protect `/bookings` as admin-only, add `/my-bookings` for authenticated users, and require authentication for `/bookings/add`.
+- Modified [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/Navbar.jsx) to only show "Bookings" links to logged-in admins, and append a "My Bookings" history link for all authenticated accounts.
+
+---
+
 ## [Sprint 7] - 2026-07-06
 ### Added
 - Created backend package controller [package.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/package.controller.js) and routes [package.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/package.routes.js) supporting admin validation and document relations.

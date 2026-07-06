@@ -44,9 +44,14 @@ export default function Navbar() {
               <NavLink to="/itineraries" className={navLinkClass}>
                 Itineraries
               </NavLink>
-              <NavLink to="/bookings" className={navLinkClass}>
-                Bookings
+              <NavLink to="/my-bookings" className={navLinkClass}>
+                My Bookings
               </NavLink>
+              {user?.role === "admin" && (
+                <NavLink to="/bookings" className={navLinkClass}>
+                  Bookings
+                </NavLink>
+              )}
             </div>
           )}
 
@@ -122,12 +127,21 @@ export default function Navbar() {
               Itineraries
             </NavLink>
             <NavLink
-              to="/bookings"
+              to="/my-bookings"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              Bookings
+              My Bookings
             </NavLink>
+            {user?.role === "admin" && (
+              <NavLink
+                to="/bookings"
+                className={navLinkClass}
+                onClick={() => setOpen(false)}
+              >
+                Bookings
+              </NavLink>
+            )}
 
             <button
               onClick={() => {

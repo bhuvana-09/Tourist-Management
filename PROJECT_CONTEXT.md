@@ -4,15 +4,15 @@ This document provides an overview of the architecture, data models, API endpoin
 
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
-- **Backend (Mock)**: JSON-Server (`http://localhost:3000`) serving `Bookings`.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, and `Itineraries`.
+- **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, and `Bookings`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
 - **Destinations**: **Completed** (Cloudinary image upload integration, database schema update from `image: String` to `images: Array`, and server-side search/filter/sort/pagination completed in Sprint 6. Hardcoded city image mapping resolved)
 - **Packages**: **Completed** (CRUD API and model validation finished in Sprint 7. Added optional/nullable `destinationId` linking relation)
 - **Itineraries**: **Completed** (CRUD API and dropdown destination select validations finished in Sprint 7. Retired legacy free-text location entry)
-- **Bookings**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
+- **Bookings**: **Completed** (CRUD API and RHF/Zod checkout validation finished in Sprint 8. Added optional/nullable `userId` reference; retired mock JSON-Server)
 
 ## Current APIs
 
@@ -55,12 +55,17 @@ This document provides an overview of the architecture, data models, API endpoin
 - `PUT/PATCH /api/itineraries/:id` - Update itinerary (Admin Only)
 - `DELETE /api/itineraries/:id` - Delete itinerary (Admin Only)
 
-### JSON-Server Backend (`http://localhost:3000`)
-- `GET/POST/PUT/PATCH/DELETE /bookings`
+#### Bookings Endpoints
+- `GET /api/bookings` - Fetch list of all bookings (Admin Only)
+- `GET /api/bookings/me` - Fetch logged-in user's own booking history (Authenticated)
+- `GET /api/bookings/:id` - Fetch single booking details (Owner or Admin Only)
+- `POST /api/bookings` - Create new booking associated with logged-in user (Authenticated)
+- `DELETE /api/bookings/:id` - Delete booking (Admin Only)
 
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 8: Booking Flow**
-  - Implement full backend CRUD endpoints and Mongoose schemas for Bookings, retiring the final JSON-server stub and transitioning the entire ecosystem onto the Express API.
+- **Sprint 9: Booking Lifecycle**
+  - Implement booking lifecycle state transitions (pending, confirmed, cancelled).
+  - Add booking cancellation/confirmation controls for users and admins.

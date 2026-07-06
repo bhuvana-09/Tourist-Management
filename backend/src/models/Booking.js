@@ -29,6 +29,12 @@ const bookingSchema = new mongoose.Schema(
     date: {
       type: String,
       required: [true, 'Booking date is required']
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+      default: null
     }
   },
   {

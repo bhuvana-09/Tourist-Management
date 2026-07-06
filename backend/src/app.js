@@ -27,6 +27,7 @@ const destinationRoutes = require('./routes/destination.routes');
 const authRoutes = require('./routes/auth.routes');
 const packageRoutes = require('./routes/package.routes');
 const itineraryRoutes = require('./routes/itinerary.routes');
+const bookingRoutes = require('./routes/booking.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
@@ -58,6 +59,7 @@ app.use('/api/destinations', destinationRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/itineraries', itineraryRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // 404 handler
 app.use(notFound);

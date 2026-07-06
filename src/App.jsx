@@ -12,6 +12,7 @@ import Destinations from "./pages/Destinations";
 import Packages from "./pages/Packages";
 import Itineraries from "./pages/Itineraries";
 import Bookings from "./pages/Bookings";
+import MyBookings from "./pages/MyBookings";
 import AddBooking from "./pages/AddBooking";
 import AddDestination from "./pages/AddDestination";
 import AddPackage from "./pages/AddPackage";
@@ -56,15 +57,37 @@ export default function App() {
               } />
 
               <Route path="/packages" element={<ProtectedRoute><Packages /></ProtectedRoute>} />
-              <Route path="/packages/add" element={<ProtectedRoute><AddPackage /></ProtectedRoute>} />
-              <Route path="/packages/edit/:id" element={<ProtectedRoute><EditPackage /></ProtectedRoute>} />
+              <Route path="/packages/add" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddPackage />
+                </ProtectedRoute>
+              } />
+              <Route path="/packages/edit/:id" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <EditPackage />
+                </ProtectedRoute>
+              } />
 
               <Route path="/itineraries" element={<ProtectedRoute><Itineraries /></ProtectedRoute>} />
-              <Route path="/itineraries/add" element={<ProtectedRoute><AddItinerary /></ProtectedRoute>} />
-              <Route path="/itineraries/edit/:id" element={<ProtectedRoute><EditItinerary /></ProtectedRoute>} />
+              <Route path="/itineraries/add" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddItinerary />
+                </ProtectedRoute>
+              } />
+              <Route path="/itineraries/edit/:id" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <EditItinerary />
+                </ProtectedRoute>
+              } />
 
-              <Route path="/bookings" element={<ProtectedRoute><Bookings /></ProtectedRoute>} />
+              {/* Bookings routes: All Bookings (Admin list), checkout (authenticated), history (authenticated) */}
+              <Route path="/bookings" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <Bookings />
+                </ProtectedRoute>
+              } />
               <Route path="/bookings/add" element={<ProtectedRoute><AddBooking /></ProtectedRoute>} />
+              <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
             </Routes>
           </main>
 
