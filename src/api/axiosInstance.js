@@ -5,6 +5,38 @@ const api = axios.create({
   baseURL: "http://localhost:3000",
 });
 
+// Dynamic Instance-Switching Interceptors for Packages & Itineraries
+api.interceptors.request.use(
+  (config) => {
+    if (config.url && (config.url.startsWith("/packages") || config.url.startsWith("/itineraries") || config.url.startsWith("/destinations"))) {
+      config.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
+      config.withCredentials = true;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+api.interceptors.response.use(
+  (response) => {
+    const url = response.config.url || "";
+    if (url.includes("/packages") || url.includes("/itineraries") || url.includes("/destinations")) {
+      if (response.data && response.data.success === true && response.data.data !== undefined) {
+        if (response.data.meta !== undefined) {
+          response.data = { data: response.data.data, meta: response.data.meta };
+        } else {
+          response.data = response.data.data;
+        }
+      }
+    }
+    return response;
+  },
+  (error) => Promise.reject(error)
+);
+
 export const backendApi = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api",
   withCredentials: true,

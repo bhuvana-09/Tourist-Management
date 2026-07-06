@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 7] - 2026-07-06
+### Added
+- Created backend package controller [package.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/package.controller.js) and routes [package.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/package.routes.js) supporting admin validation and document relations.
+- Created backend itinerary controller [itinerary.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/itinerary.controller.js) and routes [itinerary.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/itinerary.routes.js) mapping itineraries to active destinations.
+
+### Changed
+- Added optional `destinationId` ObjectId link to the Package schema model [Package.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Package.js) referencing the Destinations collection.
+- Mounted `/api/packages` and `/api/itineraries` endpoints inside the primary Express server entrypoint [app.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/app.js).
+- Extended Axios interceptors in [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js) to dynamically switch target instances and parse metadata for Packages and Itineraries.
+- Refactored frontend pages [Packages.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Packages.jsx) and [Itineraries.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Itineraries.jsx) to pull data from real endpoints, populate mapped destination properties, and restrict CRUD controls to authorized admin logins.
+- Updated package forms [AddPackage.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddPackage.jsx) and [EditPackage.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/EditPackage.jsx) to retrieve the active destination index and selection-map destinations using dropdowns.
+- Replaced the free-text destination entry inputs inside [AddItinerary.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddItinerary.jsx) and [EditItinerary.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/EditItinerary.jsx) with required destination dropdown menus matching database indices.
+
+---
+
 ## [Sprint 6] - 2026-07-06
 ### Added
 - Configured Cloudinary settings inside [cloudinary.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/config/cloudinary.js).

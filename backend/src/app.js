@@ -25,6 +25,8 @@ const morgan = require('morgan');
 const { CLIENT_URL } = require('./config/env');
 const destinationRoutes = require('./routes/destination.routes');
 const authRoutes = require('./routes/auth.routes');
+const packageRoutes = require('./routes/package.routes');
+const itineraryRoutes = require('./routes/itinerary.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
@@ -54,6 +56,8 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/destinations', destinationRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/packages', packageRoutes);
+app.use('/api/itineraries', itineraryRoutes);
 
 // 404 handler
 app.use(notFound);

@@ -30,6 +30,12 @@ const packageSchema = new mongoose.Schema(
     destinationName: {
       type: String,
       trim: true
+    },
+    destinationId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Destination',
+      required: false,
+      default: null
     }
   },
   {

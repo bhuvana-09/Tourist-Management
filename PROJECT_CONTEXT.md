@@ -4,14 +4,14 @@ This document provides an overview of the architecture, data models, API endpoin
 
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
-- **Backend (Mock)**: JSON-Server (`http://localhost:3000`) serving `Packages`, `Itineraries`, and `Bookings`.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations` and `Auth`.
+- **Backend (Mock)**: JSON-Server (`http://localhost:3000`) serving `Bookings`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, and `Itineraries`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
 - **Destinations**: **Completed** (Cloudinary image upload integration, database schema update from `image: String` to `images: Array`, and server-side search/filter/sort/pagination completed in Sprint 6. Hardcoded city image mapping resolved)
-- **Packages**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
-- **Itineraries**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
+- **Packages**: **Completed** (CRUD API and model validation finished in Sprint 7. Added optional/nullable `destinationId` linking relation)
+- **Itineraries**: **Completed** (CRUD API and dropdown destination select validations finished in Sprint 7. Retired legacy free-text location entry)
 - **Bookings**: **Seeded** (Database models and seed script complete in Sprint 2; APIs and frontend migration pending)
 
 ## Current APIs
@@ -41,15 +41,26 @@ This document provides an overview of the architecture, data models, API endpoin
 - `PUT/PATCH /api/destinations/:id` - Update destination details and upload replacement image (Admin Only)
 - `DELETE /api/destinations/:id` - Delete destination from system and destroy matching Cloudinary asset (Admin Only)
 
+#### Packages Endpoints
+- `GET /api/packages` - Fetch list of packages with populated `destinationId` details (Public)
+- `GET /api/packages/:id` - Fetch single package (Public)
+- `POST /api/packages` - Create new package (Admin Only)
+- `PUT/PATCH /api/packages/:id` - Update package fields (Admin Only)
+- `DELETE /api/packages/:id` - Delete package (Admin Only)
+
+#### Itineraries Endpoints
+- `GET /api/itineraries` - Fetch list of itineraries with populated `destinationId` details (Public)
+- `GET /api/itineraries/:id` - Fetch single itinerary (Public)
+- `POST /api/itineraries` - Create new itinerary (Admin Only)
+- `PUT/PATCH /api/itineraries/:id` - Update itinerary (Admin Only)
+- `DELETE /api/itineraries/:id` - Delete itinerary (Admin Only)
+
 ### JSON-Server Backend (`http://localhost:3000`)
-- `GET/POST/PUT/PATCH/DELETE /packages`
-- `GET/POST/PUT/PATCH/DELETE /itineraries`
 - `GET/POST/PUT/PATCH/DELETE /bookings`
 
 ## Known Issues / Manual Configuration
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 7: Packages & Itineraries**
-  - Implement full backend CRUD endpoints and Mongoose schemas for Packages and Itineraries, shutting down JSON-server stubs for these components.
-  - Wire up frontend catalogs to these new real endpoints.
+- **Sprint 8: Booking Flow**
+  - Implement full backend CRUD endpoints and Mongoose schemas for Bookings, retiring the final JSON-server stub and transitioning the entire ecosystem onto the Express API.
