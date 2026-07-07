@@ -31,18 +31,18 @@ export function AuthProvider({ children }) {
     const initAuth = async () => {
       try {
         const res = await backendApi.post("/auth/refresh");
-        const token = res.accessToken; // backendApi interceptor unwraps success/data wrapper
+        const token = res.data.accessToken; // backendApi interceptor unwraps success/data wrapper
         
         setAccessToken(token);
         setAuthToken(token);
         
         // Fetch current user details
         const meRes = await backendApi.get("/auth/me");
-        setUser(meRes); // backendApi interceptor unwraps success/data wrapper
+        setUser(meRes.data); // backendApi interceptor unwraps success/data wrapper
 
         // Fetch user's wishlist
         const wishlistRes = await backendApi.get("/users/me/wishlist");
-        setWishlist(wishlistRes.map(item => item.id || item._id || item));
+        setWishlist(wishlistRes.data.map(item => item.id || item._id || item));
       } catch (error) {
         // Silent fail is expected if no cookie exists
         setUser(null);
@@ -72,7 +72,7 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const res = await backendApi.post("/auth/login", { email, password });
-    const { accessToken: token, user: userData } = res;
+    const { accessToken: token, user: userData } = res.data;
     
     setAccessToken(token);
     setAuthToken(token);
@@ -80,7 +80,7 @@ export function AuthProvider({ children }) {
 
     try {
       const wishlistRes = await backendApi.get("/users/me/wishlist");
-      setWishlist(wishlistRes.map(item => item.id || item._id || item));
+      setWishlist(wishlistRes.data.map(item => item.id || item._id || item));
     } catch (err) {
       console.error("Failed to load wishlist on login:", err.message);
     }
