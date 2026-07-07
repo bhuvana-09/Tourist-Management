@@ -16,6 +16,7 @@
 const asyncHandler = require('../utils/asyncHandler');
 const sendEmail = require('../utils/email');
 const buildContactFormHtml = require('../templates/contactFormEmail');
+const { CONTACT_EMAIL } = require('../config/env');
 
 // @desc    Submit contact form (Stateless Email forward)
 // @route   POST /api/contact
@@ -37,7 +38,7 @@ const submitContactForm = asyncHandler(async (req, res) => {
   }
 
   // Retrieve contact target address from environment variable
-  const adminEmail = process.env.CONTACT_EMAIL || 'admin@touristportal.com';
+  const adminEmail = CONTACT_EMAIL || 'admin@touristportal.com';
 
   // Build template and dispatch email
   try {

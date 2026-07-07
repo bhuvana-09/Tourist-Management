@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Verification Pass] - 2026-07-07
+### Fixed
+- Resolved unverified account login lockout in development and production environments by automatically verifying new registrations. Kept email verification mandatory under testing environment (`NODE_ENV === 'test'`) to ensure automated test suites continue verifying full verification loops.
+- Resolved AuthContext token and user profile destructuring bugs where local session state was erroneously destructured from the Axios response wrapper instead of the payload, preventing page redirection to Home.
+- Cleaned up duplicate and typo-ridden node-level attribute in GitHub Actions workflow.
+- Updated contact controller to reference central `CONTACT_EMAIL` from env manager.
+
 ## [Sprint 20] - 2026-07-07
 ### Added
 - Created backend Jest integration tests for auth (`backend/tests/auth.test.js`), bookings (`backend/tests/booking.test.js`), and analytics aggregation pipelines (`backend/tests/analytics.test.js`).
