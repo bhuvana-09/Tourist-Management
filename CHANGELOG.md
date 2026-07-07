@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 18] - 2026-07-07
+### Added
+- Created `Blog.js` database schema model.
+- Created `blog.controller.js` and `blog.routes.js` implementing paginated listings and admin-authored CRUD with Cloudinary integration.
+- Created `contact.controller.js` and `contact.routes.js` enabling public stateless support forms forwarding to `CONTACT_EMAIL` using the Nodemailer pipeline.
+- Created HTML template [contactFormEmail.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/templates/contactFormEmail.js) for contact emails.
+- Created frontend accordion component [FAQAccordion.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/FAQAccordion.jsx).
+- Created frontend views [Blogs.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Blogs.jsx), [BlogDetail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/BlogDetail.jsx), [AddBlog.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AddBlog.jsx), [EditBlog.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/EditBlog.jsx), [Contact.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Contact.jsx), and [FAQ.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/FAQ.jsx).
+
+### Changed
+- Mounted `/api/blogs` and `/api/contact` inside `app.js`.
+- Integrated Blogs, FAQ, and Contact protected / public routes inside [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/src/App.jsx).
+- Embedded Chronicles, FAQ, and Contact navigation anchors inside [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/src/components/Navbar.jsx) (desktop & mobile).
+- Configured blog and contact route interceptions inside [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/src/api/axiosInstance.js).
+
+---
+
 ## [Sprint 17] - 2026-07-07
 ### Added
 - Installed backend report export dependencies: `json2csv`, `exceljs`, and `pdfkit`.

@@ -36,6 +36,8 @@ const userRoutes = require('./routes/user.routes');
 const notificationRoutes = require('./routes/notification.routes');
 const analyticsRoutes = require('./routes/analytics.routes');
 const exportRoutes = require('./routes/export.routes');
+const blogRoutes = require('./routes/blog.routes');
+const contactRoutes = require('./routes/contact.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
@@ -76,6 +78,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/export', exportRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/contact', contactRoutes);
 
 // 404 handler
 app.use(notFound);

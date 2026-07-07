@@ -10,7 +10,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   const navLinkClass = ({ isActive }) =>
-    `px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+    `px-3 py-1 rounded-full text-xs sm:text-sm font-medium transition-colors ${
       isActive
         ? "bg-white/90 text-blue-700 shadow-sm"
         : "text-blue-50 hover:bg-blue-500/70"
@@ -31,41 +31,55 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
-          {isLoggedIn && (
-            <div className="flex items-center gap-1 rounded-full bg-blue-800/60 px-2 py-1">
-              <NavLink to="/" className={navLinkClass} end>
-                Home
-              </NavLink>
-              <NavLink to="/destinations" className={navLinkClass}>
-                Destinations
-              </NavLink>
-              <NavLink to="/packages" className={navLinkClass}>
-                Packages
-              </NavLink>
-              <NavLink to="/itineraries" className={navLinkClass}>
-                Itineraries
-              </NavLink>
-              <NavLink to="/my-bookings" className={navLinkClass}>
-                My Bookings
-              </NavLink>
-              <NavLink to="/wishlist" className={navLinkClass}>
-                Wishlist
-              </NavLink>
-              {user?.role === "admin" && (
-                <>
-                  <NavLink to="/bookings" className={navLinkClass}>
-                    Bookings
-                  </NavLink>
-                  <NavLink to="/admin/coupons" className={navLinkClass}>
-                    Coupons
-                  </NavLink>
-                  <NavLink to="/admin/analytics" className={navLinkClass}>
-                    Analytics
-                  </NavLink>
-                </>
-              )}
-            </div>
-          )}
+          <div className="flex items-center gap-1 rounded-full bg-blue-800/60 px-2 py-1">
+            {isLoggedIn && (
+              <>
+                <NavLink to="/" className={navLinkClass} end>
+                  Home
+                </NavLink>
+                <NavLink to="/destinations" className={navLinkClass}>
+                  Destinations
+                </NavLink>
+                <NavLink to="/packages" className={navLinkClass}>
+                  Packages
+                </NavLink>
+                <NavLink to="/itineraries" className={navLinkClass}>
+                  Itineraries
+                </NavLink>
+                <NavLink to="/my-bookings" className={navLinkClass}>
+                  My Bookings
+                </NavLink>
+                <NavLink to="/wishlist" className={navLinkClass}>
+                  Wishlist
+                </NavLink>
+              </>
+            )}
+
+            {/* Public Chronicles & Helper links */}
+            <NavLink to="/blogs" className={navLinkClass}>
+              Blogs
+            </NavLink>
+            <NavLink to="/faq" className={navLinkClass}>
+              FAQ
+            </NavLink>
+            <NavLink to="/contact" className={navLinkClass}>
+              Contact
+            </NavLink>
+
+            {isLoggedIn && user?.role === "admin" && (
+              <>
+                <NavLink to="/bookings" className={navLinkClass}>
+                  Bookings
+                </NavLink>
+                <NavLink to="/admin/coupons" className={navLinkClass}>
+                  Coupons
+                </NavLink>
+                <NavLink to="/admin/analytics" className={navLinkClass}>
+                  Analytics
+                </NavLink>
+              </>
+            )}
+          </div>
 
           {isLoggedIn ? (
             <div className="flex items-center gap-4">
@@ -112,53 +126,81 @@ export default function Navbar() {
       </div>
 
       {/* Mobile nav */}
-      {isLoggedIn && open && (
+      {open && (
         <div className="md:hidden animate-slide-up">
           <div className="flex flex-col gap-1 border-t border-white/10 bg-blue-900/90 px-4 py-3">
+            {isLoggedIn && (
+              <>
+                <NavLink
+                  to="/"
+                  end
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Home
+                </NavLink>
+                <NavLink
+                  to="/destinations"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Destinations
+                </NavLink>
+                <NavLink
+                  to="/packages"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Packages
+                </NavLink>
+                <NavLink
+                  to="/itineraries"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Itineraries
+                </NavLink>
+                <NavLink
+                  to="/my-bookings"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  My Bookings
+                </NavLink>
+                <NavLink
+                  to="/wishlist"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Wishlist
+                </NavLink>
+              </>
+            )}
+
+            {/* Mobile Public Links */}
             <NavLink
-              to="/"
-              end
+              to="/blogs"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              Home
+              Blogs
             </NavLink>
             <NavLink
-              to="/destinations"
+              to="/faq"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              Destinations
+              FAQ
             </NavLink>
             <NavLink
-              to="/packages"
+              to="/contact"
               className={navLinkClass}
               onClick={() => setOpen(false)}
             >
-              Packages
+              Contact
             </NavLink>
-            <NavLink
-              to="/itineraries"
-              className={navLinkClass}
-              onClick={() => setOpen(false)}
-            >
-              Itineraries
-            </NavLink>
-            <NavLink
-              to="/my-bookings"
-              className={navLinkClass}
-              onClick={() => setOpen(false)}
-            >
-              My Bookings
-            </NavLink>
-            <NavLink
-              to="/wishlist"
-              className={navLinkClass}
-              onClick={() => setOpen(false)}
-            >
-              Wishlist
-            </NavLink>
-            {user?.role === "admin" && (
+
+            {isLoggedIn && user?.role === "admin" && (
               <>
                 <NavLink
                   to="/bookings"
@@ -184,18 +226,28 @@ export default function Navbar() {
               </>
             )}
 
-            <button
-              onClick={() => {
-                setOpen(false);
-                logout();
-              }}
-              className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/30"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Logout
-            </button>
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  logout();
+                }}
+                className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/30"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setOpen(false)}
+                className="mt-2 w-full inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}

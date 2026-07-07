@@ -5,7 +5,7 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, `AI`, `Users`, `Notifications`, `Analytics`, and `Export`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, `AI`, `Users`, `Notifications`, `Analytics`, `Export`, `Blogs`, and `Contact`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
@@ -20,6 +20,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Wishlist, Notifications, Email**: **Completed** (Idempotent user wishlist toggles, in-app notifications, and transactional confirmation/cancellation email dispatchers finished in Sprint 15)
 - **Admin Analytics Dashboard**: **Completed** (MongoDB aggregation pipeline metrics, Recharts trends line charts, status donut charts, destination booking volume bar charts, and top customers spend tables finished in Sprint 16)
 - **Forecasting & Export**: **Completed** (Explainable least-squares linear regression forecasting models and CSV/Excel/PDF streaming report exports reusing core aggregation pipeline logic finished in Sprint 17)
+- **Blogs, Contact, FAQ Pages**: **Completed** (Admin-authored blogs with Cloudinary cover images, Nodemailer stateless contact form forwards, and static general-FAQ accordions finished in Sprint 18)
 
 ## Current APIs
 
@@ -55,6 +56,16 @@ This document provides an overview of the architecture, data models, API endpoin
 
 #### Export Endpoints
 - `GET /api/export?type=csv|xlsx|pdf&report=overview|revenue|bookings|destinations` - Stream reports in CSV, Excel, or PDF formats using existing backend aggregations (Admin Only)
+
+#### Blogs Endpoints
+- `GET /api/blogs` - Get paginated list of blog articles (Public)
+- `GET /api/blogs/:id` - Get single blog post by ID (Public)
+- `POST /api/blogs` - Create a blog post with cover image (Admin Only)
+- `PUT/PATCH /api/blogs/:id` - Update blog post details and cover image (Admin Only)
+- `DELETE /api/blogs/:id` - Delete blog post and destroy cover image asset (Admin Only)
+
+#### Contact Endpoints
+- `POST /api/contact` - Validate support inputs and forward name/email/message to CONTACT_EMAIL via Nodemailer (Public)
 
 #### Destinations Endpoints
 - `GET /api/health` - Check health status of the backend API
@@ -120,5 +131,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 18: Blogs, Contact, FAQ Pages**
-  - Create front-facing user engagement portals for travel articles (blogs), message contact forms, and generalized customer helper FAQs.
+- **Sprint 19: Polish — dark mode, PWA, accessibility, performance**
+  - Implement system-wide dark mode toggle, Progressive Web App (PWA) manifest and caching rules, accessibility audit fixes, and core bundle loading performance optimizations.

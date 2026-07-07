@@ -25,6 +25,12 @@ import EditDestination from "./pages/EditDestination";
 import EditPackage from "./pages/EditPackage";
 import EditItinerary from "./pages/EditItinerary";
 import Wishlist from "./pages/Wishlist";
+import Blogs from "./pages/Blogs";
+import BlogDetail from "./pages/BlogDetail";
+import AddBlog from "./pages/AddBlog";
+import EditBlog from "./pages/EditBlog";
+import Contact from "./pages/Contact";
+import FAQ from "./pages/FAQ";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -103,6 +109,24 @@ export default function App() {
               <Route path="/admin/analytics" element={
                 <ProtectedRoute roles={["admin"]}>
                   <AdminAnalytics />
+                </ProtectedRoute>
+              } />
+
+              {/* Public content routes */}
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:id" element={<BlogDetail />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/faq" element={<FAQ />} />
+
+              {/* Admin-only blog write routes */}
+              <Route path="/blogs/add" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AddBlog />
+                </ProtectedRoute>
+              } />
+              <Route path="/blogs/edit/:id" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <EditBlog />
                 </ProtectedRoute>
               } />
             </Routes>
