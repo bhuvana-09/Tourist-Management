@@ -132,9 +132,10 @@ This document provides an overview of the architecture, data models, API endpoin
 - `POST /api/ai/travel-tips` - Insider travel guidelines safety tips (Public)
 - `POST /api/ai/faq/:destinationId` - Admin-only review-grounded FAQ editor generator (Admin Only)
 
-## Known Issues / Manual Configuration
-- **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
+- **Sprint 20: Testing, CI/CD, Deployment, Docs**: **Completed** (Auth, booking, and analytics integration testing; Jest backend and Vitest frontend configurations; GitHub Actions CI/CD configuration; CORS whitelisting; live Vercel and Render deployments; official README specification documentation)
 
-## Next Sprint Goal
-- **Sprint 20: Testing, CI/CD, Deployment, Docs**
-  - Implement integration testing frameworks, automate pipeline deployments, verify build hooks, and complete official API specs manuals.
+## Known Issues / Manual Configuration
+- **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas database.
+
+## Migration Status
+- Version 2 migration is fully **completed** across all sprints. All modules are deployed, verified, and operational.

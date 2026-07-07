@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 20] - 2026-07-07
+### Added
+- Created backend Jest integration tests for auth (`backend/tests/auth.test.js`), bookings (`backend/tests/booking.test.js`), and analytics aggregation pipelines (`backend/tests/analytics.test.js`).
+- Created Jest configuration file [jest.config.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/jest.config.js) in backend.
+- Created frontend Vitest unit/integration tests for Login component (`src/__tests__/Login.test.jsx`), ProtectedRoute wrapper (`src/__tests__/ProtectedRoute.test.jsx`), and BookingForm validation schema bounds (`src/__tests__/BookingForm.test.jsx`).
+- Created frontend setup utility [setup.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/test/setup.js).
+- Configured GitHub Actions CI pipeline [ci.yml](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/.github/workflows/ci.yml) to automatically run tests, lint, and build.
+
+### Changed
+- Configured CORS in backend [app.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/app.js) to whitelist the live Vercel deployment URL.
+- Configured Vitest options and JSDOM environment in [vite.config.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/vite.config.js).
+- Rewrote root [README.md](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/README.md) with comprehensive setup and feature documentation.
+
+---
+
 ## [Sprint 19d] - 2026-07-07
 ### Added
 - Created reusable skeleton page loading cards [SkeletonCard.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/SkeletonCard.jsx).
