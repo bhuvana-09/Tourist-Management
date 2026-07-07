@@ -50,8 +50,16 @@ app.use(helmet());
 app.use(morgan('dev'));
 
 // CORS middleware
+const allowedOrigins = CLIENT_URL ? CLIENT_URL.split(',').map(url => url.trim()) : ['http://localhost:5173'];
 app.use(cors({
-  origin: CLIENT_URL,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes('*')) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 

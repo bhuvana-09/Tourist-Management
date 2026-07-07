@@ -1,0 +1,50 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-level: '20'
+          node-version: '20'
+          cache: 'npm'
+
+      # Install & Lint & Test Backend
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          npm ci
+
+      - name: Run backend tests
+        run: |
+          cd backend
+          npm test
+
+      # Install & Lint & Test & Build Frontend
+      - name: Install frontend dependencies
+        run: |
+          npm ci
+
+      - name: Run frontend linter
+        run: |
+          npm run lint
+
+      - name: Run frontend tests
+        run: |
+          npm run test
+
+      - name: Build frontend
+        run: |
+          npm run build
