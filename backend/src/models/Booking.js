@@ -82,4 +82,10 @@ bookingSchema.set('toJSON', {
   }
 });
 
+// Indexes for search performance and analytics aggregation
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ date: 1 });
+bookingSchema.index({ paymentStatus: 1 });
+bookingSchema.index({ createdAt: 1 });
+
 module.exports = mongoose.model('Booking', bookingSchema);

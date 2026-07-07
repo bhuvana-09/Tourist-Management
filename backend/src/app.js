@@ -34,6 +34,7 @@ const reviewRoutes = require('./routes/review.routes');
 const aiRoutes = require('./routes/ai.routes');
 const userRoutes = require('./routes/user.routes');
 const notificationRoutes = require('./routes/notification.routes');
+const analyticsRoutes = require('./routes/analytics.routes');
 const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
@@ -72,6 +73,7 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // 404 handler
 app.use(notFound);

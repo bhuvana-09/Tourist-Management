@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 16] - 2026-07-07
+### Added
+- Installed `recharts` frontend visualization dependency.
+- Created `analytics.controller.js` and `analytics.routes.js` to manage admin dashboard statistics.
+- Created frontend components [AnalyticsCard.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/AnalyticsCard.jsx) and [ChartWrapper.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/ChartWrapper.jsx).
+- Created [AdminAnalytics.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AdminAnalytics.jsx) dashboard page.
+
+### Changed
+- Added query execution performance indexes on `Booking.js` model for status, date, paymentStatus, and createdAt.
+- Mounted `/api/analytics` routes inside `app.js`.
+- Integrated [AdminAnalytics.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AdminAnalytics.jsx) protected admin route in [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/src/App.jsx).
+- Integrated Admin "Analytics" link inside [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/src/components/Navbar.jsx) (desktop & mobile).
+- Configured analytics route interception inside [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/src/api/axiosInstance.js).
+
+---
+
 ## [Sprint 15] - 2026-07-07
 ### Added
 - Created `Notification.js` database schema model.

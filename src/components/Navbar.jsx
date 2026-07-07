@@ -59,6 +59,9 @@ export default function Navbar() {
                   <NavLink to="/admin/coupons" className={navLinkClass}>
                     Coupons
                   </NavLink>
+                  <NavLink to="/admin/analytics" className={navLinkClass}>
+                    Analytics
+                  </NavLink>
                 </>
               )}
             </div>
@@ -170,6 +173,13 @@ export default function Navbar() {
                   onClick={() => setOpen(false)}
                 >
                   Coupons
+                </NavLink>
+                <NavLink
+                  to="/admin/analytics"
+                  className={navLinkClass}
+                  onClick={() => setOpen(false)}
+                >
+                  Analytics
                 </NavLink>
               </>
             )}

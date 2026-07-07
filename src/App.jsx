@@ -16,6 +16,7 @@ import Itineraries from "./pages/Itineraries";
 import Bookings from "./pages/Bookings";
 import MyBookings from "./pages/MyBookings";
 import AdminCoupons from "./pages/AdminCoupons";
+import AdminAnalytics from "./pages/AdminAnalytics";
 import AddBooking from "./pages/AddBooking";
 import AddDestination from "./pages/AddDestination";
 import AddPackage from "./pages/AddPackage";
@@ -97,6 +98,11 @@ export default function App() {
               <Route path="/admin/coupons" element={
                 <ProtectedRoute roles={["admin"]}>
                   <AdminCoupons />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/analytics" element={
+                <ProtectedRoute roles={["admin"]}>
+                  <AdminAnalytics />
                 </ProtectedRoute>
               } />
             </Routes>

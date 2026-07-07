@@ -5,7 +5,7 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, `AI`, `Users`, and `Notifications`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, `AI`, `Users`, `Notifications`, and `Analytics`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
@@ -18,6 +18,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
 - **AI**: **Completed** (Gemini client SDK wrapper, try-once retry handlers, personalized recommendations grounding, day itineraries planner, site-wide rate-limited travel chatbot support, packing list builder, budget breakdowns optimizer, travel tips, admin review-grounded FAQ generator, and asynchronous background sentiment classification + cached destination AI review summaries completed in Sprint 14)
 - **Wishlist, Notifications, Email**: **Completed** (Idempotent user wishlist toggles, in-app notifications, and transactional confirmation/cancellation email dispatchers finished in Sprint 15)
+- **Admin Analytics Dashboard**: **Completed** (MongoDB aggregation pipeline metrics, Recharts trends line charts, status donut charts, destination booking volume bar charts, and top customers spend tables finished in Sprint 16)
 
 ## Current APIs
 
@@ -41,6 +42,14 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET /api/notifications/me` - Fetch user's own notifications sorted by newest first (Authenticated)
 - `PATCH /api/notifications/:id/read` - Mark a specific notification as read (Owner Only, Authenticated)
 - `PATCH /api/notifications/read-all` - Mark all user's notifications as read (Authenticated)
+
+#### Analytics Endpoints
+- `GET /api/analytics/overview?from=&to=` - Get KPI metrics summaries (Admin Only)
+- `GET /api/analytics/revenue?from=&to=` - Get revenue time series trend lines (Admin Only)
+- `GET /api/analytics/bookings?from=&to=` - Get status breakdown categories trend (Admin Only)
+- `GET /api/analytics/destinations/top?from=&to=` - Get top destinations including "Unassigned" fallback group (Admin Only)
+- `GET /api/analytics/users/top?from=&to=` - Get top customers ranked by paid spend (Admin Only)
+- `GET /api/analytics/peak-season` - Get peak travel months across all years (Admin Only)
 
 #### Destinations Endpoints
 - `GET /api/health` - Check health status of the backend API
@@ -106,5 +115,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 16: Admin Analytics Dashboard**
-  - Build real-time analytics graphs, booking statistics tracking, and revenue overview panels for administrators.
+- **Sprint 17: Forecasting & Export**
+  - Build automated analytics reporting export mechanisms (PDF / CSV) and basic future demand forecasting models.
