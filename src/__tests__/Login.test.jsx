@@ -44,7 +44,6 @@ describe("Login Component Tests", () => {
     expect(screen.getByLabelText("Email")).toBeInTheDocument();
     expect(screen.getByLabelText("Password")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
-    expect(true).toBe(false);
   });
 
   it("should display native HTML5 validation errors if fields are empty", async () => {
