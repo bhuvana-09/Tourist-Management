@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 19b] - 2026-07-07
+### Added
+- Created physical PWA configuration manifest [manifest.json](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/public/manifest.json).
+- Generated PWA application icons: `icon-192x192.png` and `icon-512x512.png`.
+- Created offline landing fallback template [offline.html](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/public/offline.html).
+
+### Changed
+- Configured Vite build routines to bundle service workers and register caching assets via `vite-plugin-pwa` in `vite.config.js`.
+- Linked manifest and theme-color meta headers inside `index.html`.
+
+---
+
 ## [Sprint 19a] - 2026-07-07
 ### Added
 - Created [ThemeContext.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/context/ThemeContext.jsx) providing toggles, current state, and applying `.dark` class selectors.
