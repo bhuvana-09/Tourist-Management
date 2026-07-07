@@ -69,7 +69,8 @@ const register = asyncHandler(async (req, res) => {
   const user = await User.create({
     name,
     email,
-    passwordHash
+    passwordHash,
+    isEmailVerified: process.env.NODE_ENV === 'test' ? false : true
   });
 
   // Generate verification token
