@@ -21,6 +21,11 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Admin Analytics Dashboard**: **Completed** (MongoDB aggregation pipeline metrics, Recharts trends line charts, status donut charts, destination booking volume bar charts, and top customers spend tables finished in Sprint 16)
 - **Forecasting & Export**: **Completed** (Explainable least-squares linear regression forecasting models and CSV/Excel/PDF streaming report exports reusing core aggregation pipeline logic finished in Sprint 17)
 - **Blogs, Contact, FAQ Pages**: **Completed** (Admin-authored blogs with Cloudinary cover images, Nodemailer stateless contact form forwards, and static general-FAQ accordions finished in Sprint 18)
+- **Sprint 19: Polish**: **In Progress**
+  - **19a: Dark Mode**: **Completed** (Persisted, class-based dark mode integrated across global shell, Home, Destinations catalog, and DestinationDetail pages)
+  - **19b: PWA**: **Pending** (Installable app manifest and offline shell fallback configurations)
+  - **19c: Accessibility (A11y)**: **Pending** (WCAG AA color contrast, screen reader labels, keyboard tab order audit)
+  - **19d: Performance**: **Pending** (Route-level lazy loading, skeleton screens, lazy-loaded images)
 
 ## Current APIs
 
@@ -131,5 +136,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 19: Polish — dark mode, PWA, accessibility, performance**
-  - Implement system-wide dark mode toggle, Progressive Web App (PWA) manifest and caching rules, accessibility audit fixes, and core bundle loading performance optimizations.
+- **Sprint 19b: Progressive Web App (PWA)**
+  - Implement app manifest definitions, meta configuration mappings, service worker build routines, and offline landing shell fallbacks.

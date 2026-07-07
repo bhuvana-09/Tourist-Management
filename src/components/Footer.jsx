@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="relative mt-20 bg-gradient-to-b from-blue-600 to-blue-700 text-white overflow-hidden">
+    <footer className="relative mt-20 bg-gradient-to-b from-blue-600 to-blue-700 dark:from-slate-900 dark:to-slate-950 text-white overflow-hidden dark:border-t dark:border-slate-800">
       {/* Decorative background pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-10 dark:opacity-5">
         <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNGMwIDIuMjA5LTEuNzkxIDQtNCA0cy00LTEuNzkxLTQtNCAxLjc5MS00IDQtNCA0IDEuNzkxIDQgNHptMC0yNGMwIDIuMjA5LTEuNzkxIDQtNCA0cy00LTEuNzkxLTQtNCAxLjc5MS00IDQtNCA0IDEuNzkxIDQgNHptMjQgMjRjMCAyLjIwOS0xLjc5MSA0LTQgNHMtNC0xLjc5MS00LTQgMS43OTEtNCA0LTQgNCAxLjc5MSA0IDR6IiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==')]"></div>
       </div>
 
@@ -13,7 +13,7 @@ export default function Footer() {
           {/* Need Help? Section */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4">Need Help?</h3>
-            <div className="space-y-3 text-sm text-blue-100">
+            <div className="space-y-3 text-sm text-blue-100 dark:text-slate-400">
               <div className="flex items-start gap-2">
                 <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
@@ -39,24 +39,24 @@ export default function Footer() {
           {/* About Section */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4">About</h3>
-            <ul className="space-y-2 text-sm text-blue-100">
+            <ul className="space-y-2 text-sm text-blue-100 dark:text-slate-400">
               <li>
-                <Link to="/" className="hover:text-white transition-colors">
+                <Link to="/" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   About us
                 </Link>
               </li>
               <li>
-                <Link to="/" className="hover:text-white transition-colors">
+                <Link to="/" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-white transition-colors">
+                <Link to="/login" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Login
                 </Link>
               </li>
               <li>
-                <Link to="/login" className="hover:text-white transition-colors">
+                <Link to="/login" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Register
                 </Link>
               </li>
@@ -66,24 +66,24 @@ export default function Footer() {
           {/* Discover Section */}
           <div>
             <h3 className="text-lg font-bold text-white mb-4">Discover</h3>
-            <ul className="space-y-2 text-sm text-blue-100">
+            <ul className="space-y-2 text-sm text-blue-100 dark:text-slate-400">
               <li>
-                <Link to="/destinations" className="hover:text-white transition-colors">
+                <Link to="/destinations" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Destinations
                 </Link>
               </li>
               <li>
-                <Link to="/packages" className="hover:text-white transition-colors">
+                <Link to="/packages" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Tour Packages
                 </Link>
               </li>
               <li>
-                <Link to="/itineraries" className="hover:text-white transition-colors">
+                <Link to="/itineraries" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Travel Itineraries
                 </Link>
               </li>
               <li>
-                <Link to="/bookings" className="hover:text-white transition-colors">
+                <Link to="/bookings" className="hover:text-white dark:hover:text-slate-200 transition-colors">
                   Bookings
                 </Link>
               </li>
@@ -98,7 +98,7 @@ export default function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -109,7 +109,7 @@ export default function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
                 aria-label="Twitter"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -120,7 +120,7 @@ export default function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
+                className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -128,14 +128,14 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-            <p className="mt-4 text-xs text-blue-200">
+            <p className="mt-4 text-xs text-blue-200 dark:text-slate-500">
               Follow us for travel inspiration and updates
             </p>
           </div>
         </div>
 
         {/* Copyright Section */}
-        <div className="mt-8 pt-6 border-t border-blue-500/30 text-center text-sm text-blue-100">
+        <div className="mt-8 pt-6 border-t border-blue-500/30 dark:border-slate-800 text-center text-sm text-blue-100 dark:text-slate-500">
           <p>© {new Date().getFullYear()} Tourist Management System. All Rights Reserved.</p>
         </div>
       </div>

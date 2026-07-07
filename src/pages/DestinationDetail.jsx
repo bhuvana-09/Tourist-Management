@@ -211,11 +211,11 @@ export default function DestinationDetail() {
         {/* Text Info */}
         <div className="space-y-6">
           <div className="space-y-2">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">
+            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
               {destination.location}
             </span>
             <div className="flex justify-between items-start gap-4">
-              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight flex-1">
+              <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight flex-1">
                 {destination.name}
               </h1>
               <WishlistButton destinationId={id} />
@@ -224,26 +224,26 @@ export default function DestinationDetail() {
             {/* Dynamic aggregated rating */}
             <div className="flex items-center gap-2 pt-1">
               <RatingStars rating={destination.avgRating} size="w-5 h-5" />
-              <span className="text-sm font-bold text-slate-800">{destination.avgRating}</span>
-              <span className="text-slate-400 text-sm">({destination.reviewCount} {destination.reviewCount === 1 ? 'review' : 'reviews'})</span>
+              <span className="text-sm font-bold text-slate-800 dark:text-slate-200">{destination.avgRating}</span>
+              <span className="text-slate-400 dark:text-slate-500 text-sm">({destination.reviewCount} {destination.reviewCount === 1 ? 'review' : 'reviews'})</span>
             </div>
           </div>
 
-          <p className="text-slate-600 leading-relaxed whitespace-pre-line text-base">
+          <p className="text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line text-base">
             {destination.description}
           </p>
 
           {/* Destination tags */}
           {destination.tags && destination.tags.length > 0 && (
             <div className="space-y-2">
-              <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider">
+              <span className="block text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                 Category Tags
               </span>
               <div className="flex flex-wrap gap-2">
                 {destination.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium"
+                    className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-xs font-medium"
                   >
                     #{tag}
                   </span>
@@ -253,7 +253,7 @@ export default function DestinationDetail() {
           )}
 
           {/* Quick link button to Bookings page */}
-          <div className="pt-4 border-t border-slate-100">
+          <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
             <Link to="/bookings/add" className="btn-primary inline-flex px-8 py-3.5 text-sm font-bold shadow-lg shadow-blue-500/20">
               Book a Tour Package
             </Link>
@@ -262,17 +262,17 @@ export default function DestinationDetail() {
       </div>
 
       {/* FAQ Section */}
-      <div className="border-t border-slate-100 pt-12 space-y-6 animate-fade">
+      <div className="border-t border-slate-100 dark:border-slate-800 pt-12 space-y-6 animate-fade">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Frequently Asked Questions</h2>
-            <p className="text-sm text-slate-500">Grounded insights compiled by our AI agent based on local reviews.</p>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Frequently Asked Questions</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Grounded insights compiled by our AI agent based on local reviews.</p>
           </div>
           {user?.role === "admin" && (
             <button
               onClick={handleRegenerateFAQ}
               disabled={faqLoading}
-              className="btn-secondary py-2 px-4 text-xs font-semibold flex items-center gap-2 border-blue-100 text-blue-600 hover:bg-blue-50"
+              className="btn-secondary py-2 px-4 text-xs font-semibold flex items-center gap-2 border-blue-100 dark:border-slate-800 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/20"
             >
               {faqLoading ? (
                 <>
@@ -296,18 +296,18 @@ export default function DestinationDetail() {
         )}
 
         {!destination.faq || destination.faq.length === 0 ? (
-          <div className="p-8 border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-sm">
+          <div className="p-8 border border-dashed border-slate-200 dark:border-slate-850 rounded-2xl text-center text-slate-500 dark:text-slate-400 text-sm">
             No FAQs available for this destination. {user?.role === "admin" && "Click Regenerate FAQ to build them using AI."}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {destination.faq.map((item, idx) => (
-              <div key={idx} className="bg-slate-50 p-5 rounded-2xl border border-slate-100/60 space-y-2">
-                <h4 className="font-bold text-slate-800 text-xs flex gap-2">
-                  <span className="text-blue-600 font-extrabold">Q:</span>
+              <div key={idx} className="bg-slate-50 dark:bg-slate-900 p-5 rounded-2xl border border-slate-100/60 dark:border-slate-800 space-y-2">
+                <h4 className="font-bold text-slate-800 dark:text-slate-200 text-xs flex gap-2">
+                  <span className="text-blue-600 dark:text-blue-450 font-extrabold">Q:</span>
                   {item.question}
                 </h4>
-                <p className="text-[11px] text-slate-600 leading-relaxed pl-4">
+                <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed pl-4">
                   {item.answer}
                 </p>
               </div>
@@ -317,32 +317,32 @@ export default function DestinationDetail() {
       </div>
 
       {/* Review Section */}
-      <div className="border-t border-slate-100 pt-12">
+      <div className="border-t border-slate-100 dark:border-slate-800 pt-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
           {/* Reviews List */}
           <div className="lg:col-span-2 space-y-6">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Customer Feedbacks</h2>
-              <p className="text-sm text-slate-500">Read what other travelers had to say about this destination</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Customer Feedbacks</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Read what other travelers had to say about this destination</p>
             </div>
 
             {/* AI reviews summary consensus */}
             {destination && destination.aiSummary && (
-              <div className="bg-gradient-to-r from-blue-50/70 to-indigo-50/70 p-5 rounded-2xl border border-blue-100/60 space-y-2.5 animate-fade">
+              <div className="bg-gradient-to-r from-blue-50/70 to-indigo-50/70 dark:from-blue-950/20 dark:to-indigo-950/20 p-5 rounded-2xl border border-blue-100/60 dark:border-blue-900/40 space-y-2.5 animate-fade">
                 <div className="flex items-center gap-2">
                   <span className="text-sm">✨</span>
-                  <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                  <h4 className="font-bold text-slate-800 dark:text-slate-200 text-xs uppercase tracking-wider">
                     What Travelers Are Saying (AI Summary)
                   </h4>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                <p className="text-xs text-slate-600 dark:text-slate-350 leading-relaxed font-medium">
                   {destination.aiSummary}
                 </p>
               </div>
             )}
 
             {reviews.length === 0 ? (
-              <div className="p-8 border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-sm">
+              <div className="p-8 border border-dashed border-slate-200 dark:border-slate-850 rounded-2xl text-center text-slate-500 dark:text-slate-400 text-sm">
                 No reviews have been submitted for this destination yet. Be the first to leave feedback!
               </div>
             ) : (
@@ -364,9 +364,9 @@ export default function DestinationDetail() {
             <AIItineraryGenerator destinationId={id} />
 
             {!isLoggedIn ? (
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center space-y-4">
-                <h3 className="font-bold text-slate-800 text-base">Been here before?</h3>
-                <p className="text-xs text-slate-500">Log in to your account to write a review for your past bookings.</p>
+              <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 text-center space-y-4">
+                <h3 className="font-bold text-slate-800 dark:text-slate-200 text-base">Been here before?</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Log in to your account to write a review for your past bookings.</p>
                 <Link to="/login" className="btn-secondary w-full inline-flex py-2 text-sm justify-center">
                   Sign In to Review
                 </Link>
@@ -378,9 +378,9 @@ export default function DestinationDetail() {
                 preselectedBookingId={preselectedBookingId}
               />
             ) : (
-              <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 text-center space-y-3">
-                <h3 className="font-semibold text-slate-700 text-sm">No Eligible Bookings</h3>
-                <p className="text-xs text-slate-400">
+              <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800 text-center space-y-3">
+                <h3 className="font-semibold text-slate-700 dark:text-slate-300 text-sm">No Eligible Bookings</h3>
+                <p className="text-xs text-slate-400 dark:text-slate-500">
                   Reviews are restricted to verified customers with completed packages to this destination.
                 </p>
               </div>

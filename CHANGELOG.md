@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 19a] - 2026-07-07
+### Added
+- Created [ThemeContext.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/context/ThemeContext.jsx) providing toggles, current state, and applying `.dark` class selectors.
+- Created [DarkModeToggle.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/DarkModeToggle.jsx) widget containing Sun and Moon icon layouts.
+
+### Changed
+- Configured `darkMode: 'class'` inside `tailwind.config.js`.
+- Appended dark-theme selectors (`dark:bg-slate-950`, `dark:text-slate-100`, etc.) in `index.css` for buttons and inputs.
+- Wrapped root app nodes in `App.jsx` inside `ThemeProvider` context wrappers.
+- Integrated the theme toggler button inside `Navbar.jsx` (desktop and mobile views).
+- Adapted page layouts to support dark themes inside `Footer.jsx`, `Home.jsx`, `Destinations.jsx`, and `DestinationDetail.jsx`.
+
+---
+
 ## [Sprint 18] - 2026-07-07
 ### Added
 - Created `Blog.js` database schema model.

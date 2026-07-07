@@ -34,13 +34,15 @@ import FAQ from "./pages/FAQ";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
+    <ThemeProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <div className="flex flex-col min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
+            <Navbar />
           
           <main className="flex-grow">
             <Routes>
@@ -137,5 +139,6 @@ export default function App() {
         </div>
       </AuthProvider>
     </BrowserRouter>
+  </ThemeProvider>
   );
 }
