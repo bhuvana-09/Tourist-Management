@@ -31,18 +31,21 @@ export function AuthProvider({ children }) {
     const initAuth = async () => {
       try {
         const res = await backendApi.post("/auth/refresh");
-        const token = res.data.accessToken; // backendApi interceptor unwraps success/data wrapper
+        const data = res.data || res;
+        const token = data.accessToken;
         
         setAccessToken(token);
         setAuthToken(token);
         
         // Fetch current user details
         const meRes = await backendApi.get("/auth/me");
-        setUser(meRes.data); // backendApi interceptor unwraps success/data wrapper
+        const userData = meRes.data || meRes;
+        setUser(userData);
 
         // Fetch user's wishlist
         const wishlistRes = await backendApi.get("/users/me/wishlist");
-        setWishlist(wishlistRes.data.map(item => item.id || item._id || item));
+        const wishlistData = wishlistRes.data || wishlistRes;
+        setWishlist((Array.isArray(wishlistData) ? wishlistData : []).map(item => item.id || item._id || item));
       } catch (error) {
         // Silent fail is expected if no cookie exists
         setUser(null);
@@ -72,7 +75,8 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     const res = await backendApi.post("/auth/login", { email, password });
-    const { accessToken: token, user: userData } = res.data;
+    const data = res.data || res;
+    const { accessToken: token, user: userData } = data;
     
     setAccessToken(token);
     setAuthToken(token);
@@ -80,7 +84,8 @@ export function AuthProvider({ children }) {
 
     try {
       const wishlistRes = await backendApi.get("/users/me/wishlist");
-      setWishlist(wishlistRes.data.map(item => item.id || item._id || item));
+      const wishlistData = wishlistRes.data || wishlistRes;
+      setWishlist((Array.isArray(wishlistData) ? wishlistData : []).map(item => item.id || item._id || item));
     } catch (err) {
       console.error("Failed to load wishlist on login:", err.message);
     }
@@ -129,7 +134,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, wishlist, toggleWishlist, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, isLoggedIn: !!user, accessToken, wishlist, toggleWishlist, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
