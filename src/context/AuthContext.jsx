@@ -23,6 +23,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Initialize session on mount
@@ -38,11 +39,16 @@ export function AuthProvider({ children }) {
         // Fetch current user details
         const meRes = await backendApi.get("/auth/me");
         setUser(meRes); // backendApi interceptor unwraps success/data wrapper
+
+        // Fetch user's wishlist
+        const wishlistRes = await backendApi.get("/users/me/wishlist");
+        setWishlist(wishlistRes.map(item => item.id || item._id || item));
       } catch (error) {
         // Silent fail is expected if no cookie exists
         setUser(null);
         setAccessToken(null);
         setAuthToken(null);
+        setWishlist([]);
       } finally {
         setLoading(false);
       }
@@ -57,6 +63,7 @@ export function AuthProvider({ children }) {
       setUser(null);
       setAccessToken(null);
       setAuthToken(null);
+      setWishlist([]);
     };
 
     window.addEventListener("auth-logout", handleLogoutEvent);
@@ -70,6 +77,14 @@ export function AuthProvider({ children }) {
     setAccessToken(token);
     setAuthToken(token);
     setUser(userData);
+
+    try {
+      const wishlistRes = await backendApi.get("/users/me/wishlist");
+      setWishlist(wishlistRes.map(item => item.id || item._id || item));
+    } catch (err) {
+      console.error("Failed to load wishlist on login:", err.message);
+    }
+
     return res;
   };
 
@@ -87,11 +102,34 @@ export function AuthProvider({ children }) {
       setUser(null);
       setAccessToken(null);
       setAuthToken(null);
+      setWishlist([]);
+    }
+  };
+
+  const toggleWishlist = async (destinationId) => {
+    if (!user) return;
+    const isFav = wishlist.includes(destinationId);
+    try {
+      if (isFav) {
+        setWishlist(prev => prev.filter(id => id !== destinationId));
+        await backendApi.delete(`/users/me/wishlist/${destinationId}`);
+      } else {
+        setWishlist(prev => [...prev, destinationId]);
+        await backendApi.post(`/users/me/wishlist/${destinationId}`);
+      }
+    } catch (err) {
+      console.error("Failed to toggle wishlist item:", err);
+      // Rollback on error
+      if (isFav) {
+        setWishlist(prev => [...prev, destinationId]);
+      } else {
+        setWishlist(prev => prev.filter(id => id !== destinationId));
+      }
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, accessToken, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, accessToken, wishlist, toggleWishlist, login, register, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

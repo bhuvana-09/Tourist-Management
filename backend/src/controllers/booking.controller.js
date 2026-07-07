@@ -18,6 +18,44 @@ const Package = require('../models/Package');
 const Coupon = require('../models/Coupon');
 const asyncHandler = require('../utils/asyncHandler');
 
+// Trigger background notification + email for booking cancellation
+const sendBookingCancellationSideEffect = async (booking) => {
+  try {
+    const Notification = require('../models/Notification');
+    const sendEmail = require('../utils/email');
+    const buildBookingCancellationHtml = require('../templates/bookingCancellationEmail');
+
+    const packageName = booking.packageId?.name || 'Your Tour Package';
+
+    // 1. Create in-app notification
+    await Notification.create({
+      userId: booking.userId._id,
+      type: 'booking_cancelled',
+      message: `Your booking for "${packageName}" has been cancelled.`
+    });
+
+    // 2. Send HTML cancellation email
+    const emailHtml = buildBookingCancellationHtml({
+      bookingId: booking._id.toString(),
+      packageName,
+      guests: booking.travelers || 1,
+      totalPrice: booking.totalPrice,
+      travelDate: booking.date,
+      userName: booking.userId?.name
+    });
+
+    if (booking.userId?.email) {
+      await sendEmail({
+        to: booking.userId.email,
+        subject: `Booking Cancelled: ${packageName}`,
+        html: emailHtml
+      });
+    }
+  } catch (err) {
+    console.error('Failed to dispatch booking cancellation notification/email:', err.message);
+  }
+};
+
 // @desc    Get all bookings (Admin Only)
 // @route   GET /api/bookings
 // @access  Private (Admin Only)
@@ -191,7 +229,13 @@ const cancelBooking = asyncHandler(async (req, res) => {
 
   const populated = await Booking.findById(booking._id)
     .populate('packageId')
-    .populate('couponApplied');
+    .populate('couponApplied')
+    .populate('userId', 'name email');
+
+  // Trigger background job (fire-and-forget, non-blocking)
+  // Placement note: Triggered here once cancellation has been persisted in database,
+  // preventing double notifications on page refreshes as status validator guards against duplicate cancellations.
+  sendBookingCancellationSideEffect(populated);
 
   res.status(200).json({
     success: true,

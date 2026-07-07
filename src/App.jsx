@@ -23,6 +23,7 @@ import AddItinerary from "./pages/AddItinerary";
 import EditDestination from "./pages/EditDestination";
 import EditPackage from "./pages/EditPackage";
 import EditItinerary from "./pages/EditItinerary";
+import Wishlist from "./pages/Wishlist";
 
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
@@ -92,6 +93,7 @@ export default function App() {
               } />
               <Route path="/bookings/add" element={<ProtectedRoute><AddBooking /></ProtectedRoute>} />
               <Route path="/my-bookings" element={<ProtectedRoute><MyBookings /></ProtectedRoute>} />
+              <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
               <Route path="/admin/coupons" element={
                 <ProtectedRoute roles={["admin"]}>
                   <AdminCoupons />

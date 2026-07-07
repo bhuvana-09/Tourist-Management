@@ -5,7 +5,7 @@ This document provides an overview of the architecture, data models, API endpoin
 ## Current Architecture
 - **Frontend**: React 19 + Vite 7 + Tailwind CSS + React Router v7 SPA (listening on `http://localhost:5173`)
 - **Backend (Mock)**: Retired completely. JSON-Server is no longer required for any resource.
-- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, and `AI`.
+- **Backend (Real)**: Node.js + Express + MongoDB Atlas (`http://localhost:5000/api`) serving `Destinations`, `Auth`, `Packages`, `Itineraries`, `Bookings`, `Coupons`, `Payments`, `Reviews`, `AI`, `Users`, and `Notifications`.
 
 ## Resource Migration Status
 - **Auth**: **Completed** (JWT-based backend and frontend auth fully integrated in Sprint 4; Password Reset & Roles implemented in Sprint 5)
@@ -17,6 +17,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
 - **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
 - **AI**: **Completed** (Gemini client SDK wrapper, try-once retry handlers, personalized recommendations grounding, day itineraries planner, site-wide rate-limited travel chatbot support, packing list builder, budget breakdowns optimizer, travel tips, admin review-grounded FAQ generator, and asynchronous background sentiment classification + cached destination AI review summaries completed in Sprint 14)
+- **Wishlist, Notifications, Email**: **Completed** (Idempotent user wishlist toggles, in-app notifications, and transactional confirmation/cancellation email dispatchers finished in Sprint 15)
 
 ## Current APIs
 
@@ -30,6 +31,16 @@ This document provides an overview of the architecture, data models, API endpoin
 - `GET /api/auth/me` - Fetch current authenticated user's profile (requires bearer token)
 - `POST /api/auth/forgot-password` - Request a password reset email (generic response to prevent user enumeration)
 - `POST /api/auth/reset-password/:token` - Reset user password using active verification token
+
+#### Users (Wishlist) Endpoints
+- `POST /api/users/me/wishlist/:destinationId` - Add a destination to wishlist (Idempotent, Authenticated)
+- `DELETE /api/users/me/wishlist/:destinationId` - Remove a destination from wishlist (Authenticated)
+- `GET /api/users/me/wishlist` - Fetch user's fully populated wishlist destinations (Authenticated)
+
+#### Notifications Endpoints
+- `GET /api/notifications/me` - Fetch user's own notifications sorted by newest first (Authenticated)
+- `PATCH /api/notifications/:id/read` - Mark a specific notification as read (Owner Only, Authenticated)
+- `PATCH /api/notifications/read-all` - Mark all user's notifications as read (Authenticated)
 
 #### Destinations Endpoints
 - `GET /api/health` - Check health status of the backend API
@@ -95,5 +106,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 15: Wishlist, Notifications, Email**
-  - Build traveler wishlist manager, site-wide notifications system, and transactional updates email dispatchers.
+- **Sprint 16: Admin Analytics Dashboard**
+  - Build real-time analytics graphs, booking statistics tracking, and revenue overview panels for administrators.

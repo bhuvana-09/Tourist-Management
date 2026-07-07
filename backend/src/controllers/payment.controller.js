@@ -14,6 +14,44 @@ const razorpay = require('../config/razorpay');
 const { RAZORPAY_KEY_SECRET } = require('../config/env');
 const asyncHandler = require('../utils/asyncHandler');
 
+// Trigger background notification + email for booking confirmation
+const sendBookingConfirmationSideEffect = async (booking, paymentRef) => {
+  try {
+    const Notification = require('../models/Notification');
+    const sendEmail = require('../utils/email');
+    const buildBookingConfirmationHtml = require('../templates/bookingConfirmationEmail');
+
+    const packageName = booking.packageId?.name || 'Your Tour Package';
+    
+    // 1. Create in-app notification
+    await Notification.create({
+      userId: booking.userId._id,
+      type: 'booking_confirmed',
+      message: `Your booking for "${packageName}" has been confirmed! Payment Ref: ${paymentRef}`
+    });
+
+    // 2. Send HTML confirmation email
+    const emailHtml = buildBookingConfirmationHtml({
+      bookingId: booking._id.toString(),
+      packageName,
+      guests: booking.guests || 1,
+      totalPrice: booking.totalPrice,
+      travelDate: booking.date,
+      userName: booking.userId?.name
+    });
+
+    if (booking.userId?.email) {
+      await sendEmail({
+        to: booking.userId.email,
+        subject: `Booking Confirmed: ${packageName}`,
+        html: emailHtml
+      });
+    }
+  } catch (err) {
+    console.error('Failed to dispatch booking confirmation notification/email:', err.message);
+  }
+};
+
 // @desc    Create a new Razorpay order for a booking
 // @route   POST /api/payments/create-order
 // @access  Private
@@ -110,13 +148,25 @@ const verifyPayment = asyncHandler(async (req, res) => {
     throw new Error('Payment signature verification failed. Possible tampering detected.');
   }
 
+  // Idempotency: Check if booking is already paid to avoid double notifications/emails
+  const wasAlreadyPaid = booking.paymentStatus === 'paid';
+
   // Payment verified: update status
   booking.status = 'confirmed';
   booking.paymentStatus = 'paid';
   booking.paymentRef = razorpay_payment_id;
   await booking.save();
 
-  const populated = await Booking.findById(booking._id).populate('packageId');
+  const populated = await Booking.findById(booking._id)
+    .populate('packageId')
+    .populate('userId', 'name email');
+
+  // Asynchronously trigger notification + email confirmation (fire-and-forget)
+  // Placement note: Triggered here once signature has been verified and database is successfully updated,
+  // guarded by the 'wasAlreadyPaid' check to prevent duplicate sends on user refresh or retry checkout actions.
+  if (!wasAlreadyPaid) {
+    sendBookingConfirmationSideEffect(populated, razorpay_payment_id);
+  }
 
   res.status(200).json({
     success: true,

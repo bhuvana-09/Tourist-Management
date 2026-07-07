@@ -38,7 +38,13 @@ const userSchema = new mongoose.Schema(
     resetTokenExpiry: {
       type: Date,
       default: null
-    }
+    },
+    wishlist: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Destination'
+      }
+    ]
   },
   {
     timestamps: true

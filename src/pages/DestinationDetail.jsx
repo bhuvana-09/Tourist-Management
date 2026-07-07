@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import WishlistButton from "../components/WishlistButton";
 import RatingStars from "../components/RatingStars";
 import ReviewCard from "../components/ReviewCard";
 import ReviewForm from "../components/ReviewForm";
@@ -213,9 +214,12 @@ export default function DestinationDetail() {
             <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">
               {destination.location}
             </span>
-            <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
-              {destination.name}
-            </h1>
+            <div className="flex justify-between items-start gap-4">
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight flex-1">
+                {destination.name}
+              </h1>
+              <WishlistButton destinationId={id} />
+            </div>
             
             {/* Dynamic aggregated rating */}
             <div className="flex items-center gap-2 pt-1">

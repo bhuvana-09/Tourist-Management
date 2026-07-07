@@ -1,6 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import NotificationBell from "./NotificationBell";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -47,6 +48,9 @@ export default function Navbar() {
               <NavLink to="/my-bookings" className={navLinkClass}>
                 My Bookings
               </NavLink>
+              <NavLink to="/wishlist" className={navLinkClass}>
+                Wishlist
+              </NavLink>
               {user?.role === "admin" && (
                 <>
                   <NavLink to="/bookings" className={navLinkClass}>
@@ -61,15 +65,18 @@ export default function Navbar() {
           )}
 
           {isLoggedIn ? (
-            <button
-              onClick={logout}
-              className="inline-flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-blue-700"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Logout
-            </button>
+            <div className="flex items-center gap-4">
+              <NotificationBell />
+              <button
+                onClick={logout}
+                className="inline-flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-blue-700"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
+            </div>
           ) : (
             <Link
               to="/login"
@@ -83,25 +90,28 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          type="button"
-          className="inline-flex items-center justify-center rounded-md bg-white/10 p-2 text-white hover:bg-white/20 md:hidden"
-          onClick={() => setOpen((prev) => !prev)}
-        >
-          <span className="sr-only">Toggle navigation</span>
-          <div className="space-y-1">
-            <span className="block h-0.5 w-5 bg-white"></span>
-            <span className="block h-0.5 w-5 bg-white"></span>
-            <span className="block h-0.5 w-5 bg-white"></span>
-          </div>
-        </button>
+        {/* Mobile Actions Container */}
+        <div className="flex items-center gap-3 md:hidden">
+          {isLoggedIn && <NotificationBell />}
+          <button
+            type="button"
+            className="inline-flex items-center justify-center rounded-md bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            <span className="sr-only">Toggle navigation</span>
+            <div className="space-y-1">
+              <span className="block h-0.5 w-5 bg-white"></span>
+              <span className="block h-0.5 w-5 bg-white"></span>
+              <span className="block h-0.5 w-5 bg-white"></span>
+            </div>
+          </button>
+        </div>
       </div>
 
       {/* Mobile nav */}
       {isLoggedIn && open && (
         <div className="md:hidden animate-slide-up">
-          <div className="space-y-1 border-t border-white/10 bg-blue-900/90 px-4 py-3">
+          <div className="flex flex-col gap-1 border-t border-white/10 bg-blue-900/90 px-4 py-3">
             <NavLink
               to="/"
               end
@@ -137,6 +147,13 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
             >
               My Bookings
+            </NavLink>
+            <NavLink
+              to="/wishlist"
+              className={navLinkClass}
+              onClick={() => setOpen(false)}
+            >
+              Wishlist
             </NavLink>
             {user?.role === "admin" && (
               <>

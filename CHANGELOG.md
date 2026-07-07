@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 15] - 2026-07-07
+### Added
+- Created `Notification.js` database schema model.
+- Created `user.controller.js` and `user.routes.js` to manage user wishlist toggles and population.
+- Created `notification.controller.js` and `notification.routes.js` to manage notification lists and read states.
+- Created Nodemailer HTML email templates for booking confirmations and booking cancellations.
+- Created frontend floating components [WishlistButton.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/WishlistButton.jsx) and [NotificationBell.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/NotificationBell.jsx).
+- Created [Wishlist.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Wishlist.jsx) page displaying populated saved destinations.
+
+### Changed
+- Added `wishlist` array reference to `User.js` model.
+- Mounted `/api/users` and `/api/notifications` inside `app.js`.
+- Modified `payment.controller.js` to dispatch confirmation emails and notifications asynchronously upon successful signature verification, guarded against duplicate firing.
+- Modified `booking.controller.js` to dispatch cancellation emails and notifications asynchronously upon successful cancel actions.
+- Integrated [NotificationBell.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/NotificationBell.jsx) and wishlist links inside [Navbar.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/Navbar.jsx) (desktop & mobile).
+- Mounted `/wishlist` protected route in [App.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/App.jsx).
+- Added [WishlistButton.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/WishlistButton.jsx) overlays on destination grids in [Destinations.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/Destinations.jsx) and header details in [DestinationDetail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/DestinationDetail.jsx).
+- Configured user and notification route interceptions inside [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/api/axiosInstance.js).
+
+---
+
 ## [Sprint 14] - 2026-07-07
 ### Added
 - Added `sentimentLabel` and `sentimentScore` schema fields to [Review.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Review.js) database model.

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import WishlistButton from "../components/WishlistButton";
 
 export default function Destinations() {
   const { user } = useAuth();
@@ -273,9 +274,13 @@ export default function Destinations() {
             {destinations.map((dest, index) => (
               <div
                 key={dest.id}
-                className="animate-scale-in rounded-2xl bg-white shadow-lg overflow-hidden card-hover flex flex-col justify-between"
+                className="animate-scale-in rounded-2xl bg-white shadow-lg overflow-hidden card-hover flex flex-col justify-between relative"
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
+                {/* Wishlist Button Overlay */}
+                <div className="absolute top-4 right-4 z-10">
+                  <WishlistButton destinationId={dest.id} />
+                </div>
                 <div>
                   {/* Image Link */}
                   <Link to={`/destinations/${dest.id}`} className="block relative h-64 overflow-hidden group">
