@@ -48,7 +48,22 @@ export default function ReviewCard({ review, currentUser, onDelete }) {
       </div>
 
       <div className="space-y-1">
-        <RatingStars rating={review.rating} size="w-4 h-4" />
+        <div className="flex items-center gap-2">
+          <RatingStars rating={review.rating} size="w-4 h-4" />
+          {review.sentimentLabel && (
+            <span
+              className={`inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider ${
+                review.sentimentLabel === "positive"
+                  ? "bg-emerald-50 text-emerald-700 border border-emerald-150"
+                  : review.sentimentLabel === "negative"
+                  ? "bg-rose-50 text-rose-700 border border-rose-150"
+                  : "bg-slate-100 text-slate-750 border border-slate-200"
+              }`}
+            >
+              {review.sentimentLabel}
+            </span>
+          )}
+        </div>
         <p className="text-sm text-slate-650 leading-relaxed pr-2">
           {review.text}
         </p>

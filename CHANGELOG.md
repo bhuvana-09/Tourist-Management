@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 14] - 2026-07-07
+### Added
+- Added `sentimentLabel` and `sentimentScore` schema fields to [Review.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Review.js) database model.
+- Added `aiSummary` schema field to [Destination.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/models/Destination.js) database model.
+- Created `buildSentimentPrompt` and `buildReviewSummaryPrompt` helper functions inside [aiPrompts.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/services/aiPrompts.js).
+- Integrated sentiment color badges inside [ReviewCard.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/ReviewCard.jsx) dynamically displaying sentiment tags.
+- Integrated AI Traveler Reviews summary consensus card inside [DestinationDetail.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/DestinationDetail.jsx).
+
+### Changed
+- Modified [review.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/review.controller.js) review creator to return the saved review document to client immediately, launching background non-blocking workers to execute sentiment analysis classification and destination-level reviews summary compiling.
+
+---
+
 ## [Sprint 13] - 2026-07-06
 ### Added
 - Installed `express-rate-limit` backend dependency.

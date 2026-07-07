@@ -32,6 +32,65 @@ const updateDestinationRatings = async (destinationId) => {
   });
 };
 
+/**
+ * Background AI review classification and destination summary compile job.
+ * 
+ * Architecture decision:
+ * We invoke this function asynchronously (without await) inside createReview.
+ * Review submission needs to feel instantaneous to the user. Calling external
+ * LLM APIs (Gemini) takes 1-3 seconds, which would negatively impact response times.
+ * Running it in the background keeps user experience fast.
+ * If the background LLM calls fail due to quota/network, we log it and swallow
+ * the error, ensuring the user's review rating and text remain valid in our database.
+ */
+const processReviewSentimentAndSummary = async (reviewId, destinationId) => {
+  try {
+    const review = await Review.findById(reviewId);
+    if (!review) return;
+
+    const { generateContent } = require('../services/aiService');
+    const { buildSentimentPrompt, buildReviewSummaryPrompt } = require('../services/aiPrompts');
+
+    // 1. Sentiment classification
+    const sentimentPrompt = buildSentimentPrompt(review.text);
+    const rawSentiment = await generateContent(sentimentPrompt);
+    if (rawSentiment) {
+      try {
+        let cleaned = rawSentiment.trim();
+        if (cleaned.startsWith('```')) {
+          cleaned = cleaned.replace(/^```(json)?/i, '').replace(/```$/, '').trim();
+        }
+        const parsed = JSON.parse(cleaned);
+        if (parsed && parsed.label) {
+          review.sentimentLabel = parsed.label;
+          review.sentimentScore = typeof parsed.score === 'number' ? parsed.score : null;
+          await review.save();
+          console.log(`Successfully classified review ${reviewId} sentiment as: ${parsed.label}`);
+        }
+      } catch (jsonErr) {
+        console.warn('Failed parsing JSON sentiment response:', jsonErr.message);
+      }
+    }
+
+    // 2. Summary regeneration
+    if (destinationId) {
+      const allReviews = await Review.find({ destinationId });
+      if (allReviews.length > 0) {
+        const summaryPrompt = buildReviewSummaryPrompt(allReviews);
+        const rawSummary = await generateContent(summaryPrompt);
+        if (rawSummary) {
+          await Destination.findByIdAndUpdate(destinationId, {
+            aiSummary: rawSummary.trim()
+          });
+          console.log(`Successfully compiled new AI summary for destination ${destinationId}`);
+        }
+      }
+    }
+  } catch (err) {
+    console.error('Background review AI classification/summary compile failed:', err.message);
+  }
+};
+
 // @desc    Create a new review
 // @route   POST /api/reviews
 // @access  Private
@@ -90,6 +149,9 @@ const createReview = asyncHandler(async (req, res) => {
   }
 
   const populated = await Review.findById(review._id).populate('userId', 'name role');
+
+  // Trigger background job (fire-and-forget, non-blocking)
+  processReviewSentimentAndSummary(review._id, destId);
 
   res.status(201).json({
     success: true,

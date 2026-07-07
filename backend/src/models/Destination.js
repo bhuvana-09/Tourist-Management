@@ -49,7 +49,11 @@ const destinationSchema = new mongoose.Schema(
         question: { type: String, required: true },
         answer: { type: String, required: true }
       }
-    ]
+    ],
+    aiSummary: {
+      type: String,
+      default: ''
+    }
   },
   {
     timestamps: true

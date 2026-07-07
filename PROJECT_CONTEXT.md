@@ -16,7 +16,7 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Coupons**: **Completed** (Database model, validator middleware, validation-preview endpoint, and admin coupons manager finished in Sprint 9)
 - **Payments**: **Completed** (Razorpay test-mode integration, local HMAC-SHA256 signature verification, retry checkout path, and simulated refunds finished in Sprint 10)
 - **Reviews**: **Completed** (Database model, strict completion-eligibility validations, dynamic rating re-computation, detail pages, and rating stars finished in Sprint 11)
-- **AI**: **Completed** (Gemini client SDK wrapper, try-once retry handlers, personalized recommendations grounding, day itineraries planner, site-wide rate-limited travel chatbot support, packing list builder, budget breakdowns optimizer, travel tips, and admin review-grounded FAQ generator completed in Sprint 13)
+- **AI**: **Completed** (Gemini client SDK wrapper, try-once retry handlers, personalized recommendations grounding, day itineraries planner, site-wide rate-limited travel chatbot support, packing list builder, budget breakdowns optimizer, travel tips, admin review-grounded FAQ generator, and asynchronous background sentiment classification + cached destination AI review summaries completed in Sprint 14)
 
 ## Current APIs
 
@@ -95,5 +95,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 14: AI Review Summarizer**
-  - Build AI-powered review text analyzers for sentiment assessment and destination summaries compilation.
+- **Sprint 15: Wishlist, Notifications, Email**
+  - Build traveler wishlist manager, site-wide notifications system, and transactional updates email dispatchers.

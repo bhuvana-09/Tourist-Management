@@ -28,6 +28,15 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Review message is required'],
       trim: true
+    },
+    sentimentLabel: {
+      type: String,
+      enum: ['positive', 'neutral', 'negative'],
+      default: null
+    },
+    sentimentScore: {
+      type: Number,
+      default: null
     }
   },
   {

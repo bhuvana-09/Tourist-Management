@@ -322,6 +322,21 @@ export default function DestinationDetail() {
               <p className="text-sm text-slate-500">Read what other travelers had to say about this destination</p>
             </div>
 
+            {/* AI reviews summary consensus */}
+            {destination && destination.aiSummary && (
+              <div className="bg-gradient-to-r from-blue-50/70 to-indigo-50/70 p-5 rounded-2xl border border-blue-100/60 space-y-2.5 animate-fade">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm">✨</span>
+                  <h4 className="font-bold text-slate-800 text-xs uppercase tracking-wider">
+                    What Travelers Are Saying (AI Summary)
+                  </h4>
+                </div>
+                <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                  {destination.aiSummary}
+                </p>
+              </div>
+            )}
+
             {reviews.length === 0 ? (
               <div className="p-8 border border-dashed border-slate-200 rounded-2xl text-center text-slate-500 text-sm">
                 No reviews have been submitted for this destination yet. Be the first to leave feedback!

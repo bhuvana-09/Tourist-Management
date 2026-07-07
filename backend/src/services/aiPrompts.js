@@ -232,6 +232,46 @@ ${reviewsText}
 ]`;
 };
 
+/**
+ * Build sentiment analysis prompt for a review message
+ */
+const buildSentimentPrompt = (reviewText) => {
+  return `You are a sentiment analysis classifier.
+Analyze the sentiment of the following customer review message:
+
+Review text: "${reviewText}"
+
+### Requirements:
+1. Classify the overall sentiment into exactly one of these labels: "positive", "neutral", or "negative".
+2. Provide a confidence score (from 0.0 representing low confidence to 1.0 representing maximum confidence).
+3. Output your response as a RAW JSON object. Do NOT wrap the JSON in markdown code blocks (\`\`\`json ... \`\`\`), do not write any pre-amble, headers, or conversational text.
+
+### Target Output JSON Schema:
+{
+  "label": "positive",
+  "score": 0.95
+}`;
+};
+
+/**
+ * Build review synthesis summary prompt for a destination catalog
+ */
+const buildReviewSummaryPrompt = (reviews = []) => {
+  const reviewsText = reviews.length > 0
+    ? reviews.map((r, i) => `Review ${i + 1}: "${r.text}"`).join('\n')
+    : 'No customer reviews submitted yet.';
+
+  return `You are a travel editor assistant.
+Analyze the following traveler reviews and compile a concise 2-3 sentence summary summarizing what travelers are actually saying about this destination.
+
+### Customer Reviews:
+${reviewsText}
+
+### Requirements:
+1. Sift through highlights, key strengths, common complaints, or local advices mentioned in the traveler reviews.
+2. Return ONLY the plain text summary. Do not include markdown headers, bullet points, prefixes (like "Summary:"), or conversational text.`;
+};
+
 module.exports = {
   buildRecommendationsPrompt,
   buildItineraryPrompt,
@@ -239,5 +279,7 @@ module.exports = {
   buildBudgetPrompt,
   buildPackingListPrompt,
   buildTravelTipsPrompt,
-  buildFAQPrompt
+  buildFAQPrompt,
+  buildSentimentPrompt,
+  buildReviewSummaryPrompt
 };
