@@ -18,7 +18,8 @@ api.interceptors.request.use(
       config.url.startsWith("/ai") ||
       config.url.startsWith("/users") ||
       config.url.startsWith("/notifications") ||
-      config.url.startsWith("/analytics")
+      config.url.startsWith("/analytics") ||
+      config.url.startsWith("/export")
     )) {
       config.baseURL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api";
       config.withCredentials = true;
@@ -44,7 +45,8 @@ api.interceptors.response.use(
       url.includes("/ai") ||
       url.includes("/users") ||
       url.includes("/notifications") ||
-      url.includes("/analytics")
+      url.includes("/analytics") ||
+      url.includes("/export")
     ) {
       if (response.data && response.data.success === true && response.data.data !== undefined) {
         if (response.data.meta !== undefined) {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { backendApi as api } from "../api/axiosInstance";
 import AnalyticsCard from "../components/AnalyticsCard";
 import ChartWrapper from "../components/ChartWrapper";
+import ExportButtonGroup from "../components/ExportButtonGroup";
 import {
   ResponsiveContainer,
   LineChart,
@@ -23,6 +24,10 @@ export default function AdminAnalytics() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
 
+  // Forecast filters
+  const [forecastType, setForecastType] = useState("revenue");
+  const [forecastDays, setForecastDays] = useState(30);
+
   // Data states
   const [overview, setOverview] = useState({
     totalBookings: 0,
@@ -36,9 +41,18 @@ export default function AdminAnalytics() {
   const [topUsers, setTopUsers] = useState([]);
   const [peakSeason, setPeakSeason] = useState([]);
 
+  // Forecast states
+  const [forecastData, setForecastData] = useState([]);
+  const [forecastStats, setForecastStats] = useState({
+    slope: 0,
+    intercept: 0,
+    hasEnoughData: false
+  });
+
   // Loading states
   const [loadingOverview, setLoadingOverview] = useState(true);
   const [loadingCharts, setLoadingCharts] = useState(true);
+  const [loadingForecast, setLoadingForecast] = useState(true);
 
   const fetchOverview = async () => {
     try {
@@ -69,7 +83,7 @@ export default function AdminAnalytics() {
         api.get("/analytics/bookings", { params }),
         api.get("/analytics/destinations/top", { params }),
         api.get("/analytics/users/top", { params }),
-        api.get("/analytics/peak-season") // peak season is all-time across years
+        api.get("/analytics/peak-season")
       ]);
 
       setRevenueTrend(revRes || []);
@@ -84,10 +98,53 @@ export default function AdminAnalytics() {
     }
   };
 
+  const fetchForecast = async () => {
+    try {
+      setLoadingForecast(true);
+      const res = await api.get("/analytics/forecast", {
+        params: { type: forecastType, days: forecastDays }
+      });
+
+      if (res && res.history) {
+        const history = res.history || [];
+        const projection = res.projection || [];
+
+        // Connect the projection line to the last history point
+        const combined = [
+          ...history.map((h, idx) => ({
+            date: h.date,
+            Historical: h.value,
+            Projected: idx === history.length - 1 ? h.value : null
+          })),
+          ...projection.map(p => ({
+            date: p.date,
+            Historical: null,
+            Projected: p.value
+          }))
+        ];
+
+        setForecastData(combined);
+        setForecastStats({
+          slope: res.slope || 0,
+          intercept: res.intercept || 0,
+          hasEnoughData: res.hasEnoughData ?? false
+        });
+      }
+    } catch (err) {
+      console.error("Failed to load forecast analytics:", err.message);
+    } finally {
+      setLoadingForecast(false);
+    }
+  };
+
   useEffect(() => {
     fetchOverview();
     fetchChartsData();
   }, [from, to]);
+
+  useEffect(() => {
+    fetchForecast();
+  }, [forecastType, forecastDays]);
 
   // Color constants
   const STATUS_COLORS = {
@@ -151,55 +208,64 @@ export default function AdminAnalytics() {
       </div>
 
       {/* KPI Cards Row */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <AnalyticsCard
-          title="Total Bookings"
-          value={loadingOverview ? "..." : overview.totalBookings}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-          }
-        />
-        <AnalyticsCard
-          title="Total Revenue"
-          value={loadingOverview ? "..." : `$${overview.totalRevenue.toLocaleString()}`}
-          trend="USD"
-          trendType="neutral"
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
-        />
-        <AnalyticsCard
-          title="Cancellation Rate"
-          value={loadingOverview ? "..." : `${overview.cancellationRate}%`}
-          trend={overview.cancellationRate > 20 ? "High" : "Optimal"}
-          trendType={overview.cancellationRate > 20 ? "down" : "up"}
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-          }
-        />
-        <AnalyticsCard
-          title="Average Spend"
-          value={loadingOverview ? "..." : `$${overview.averageSpend.toLocaleString()}`}
-          trend="Per Booking"
-          trendType="neutral"
-          icon={
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-          }
-        />
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h3 className="text-sm font-bold text-slate-700">Metrics Overview</h3>
+          <ExportButtonGroup report="overview" from={from} to={to} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <AnalyticsCard
+            title="Total Bookings"
+            value={loadingOverview ? "..." : overview.totalBookings}
+            icon={
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            }
+          />
+          <AnalyticsCard
+            title="Total Revenue"
+            value={loadingOverview ? "..." : `$${overview.totalRevenue.toLocaleString()}`}
+            trend="USD"
+            trendType="neutral"
+            icon={
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            }
+          />
+          <AnalyticsCard
+            title="Cancellation Rate"
+            value={loadingOverview ? "..." : `${overview.cancellationRate}%`}
+            trend={overview.cancellationRate > 20 ? "High" : "Optimal"}
+            trendType={overview.cancellationRate > 20 ? "down" : "up"}
+            icon={
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            }
+          />
+          <AnalyticsCard
+            title="Average Spend"
+            value={loadingOverview ? "..." : `$${overview.averageSpend.toLocaleString()}`}
+            trend="Per Booking"
+            trendType="neutral"
+            icon={
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            }
+          />
+        </div>
       </div>
 
       {/* Chart Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Revenue Line Chart */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 relative">
+          <div className="absolute top-6 right-6 z-10">
+            <ExportButtonGroup report="revenue" from={from} to={to} />
+          </div>
           <ChartWrapper title="Revenue & Bookings Trend" loading={loadingCharts}>
             {revenueTrend.length === 0 ? (
               <div className="h-full flex items-center justify-center text-slate-400">No trend data found.</div>
@@ -221,7 +287,10 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Bookings Status Donut Chart */}
-        <div>
+        <div className="relative">
+          <div className="absolute top-6 right-6 z-10">
+            <ExportButtonGroup report="bookings" from={from} to={to} />
+          </div>
           <ChartWrapper title="Bookings by Status" loading={loadingCharts}>
             {bookingsBreakdown.length === 0 ? (
               <div className="h-full flex items-center justify-center text-slate-400">No status breakdown data.</div>
@@ -251,7 +320,10 @@ export default function AdminAnalytics() {
         </div>
 
         {/* Top Destinations */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 relative">
+          <div className="absolute top-6 right-6 z-10">
+            <ExportButtonGroup report="destinations" from={from} to={to} />
+          </div>
           <ChartWrapper title="Top Destinations (by Booking volume)" loading={loadingCharts}>
             {topDestinations.length === 0 ? (
               <div className="h-full flex items-center justify-center text-slate-400">No destination data found.</div>
@@ -290,6 +362,79 @@ export default function AdminAnalytics() {
               </ResponsiveContainer>
             )}
           </ChartWrapper>
+        </div>
+      </div>
+
+      {/* Forecast Panel Section */}
+      <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-50 pb-4">
+          <div>
+            <h3 className="font-extrabold text-slate-900 text-lg">
+              Predictive Demand Forecasting
+            </h3>
+            <p className="text-xs text-slate-400 mt-0.5">
+              Deterministic least-squares linear projection of trailing 90 days volume.
+            </p>
+          </div>
+
+          {/* Controls */}
+          <div className="flex items-center gap-3">
+            <select
+              value={forecastType}
+              onChange={(e) => setForecastType(e.target.value)}
+              className="text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-xl outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="revenue">Revenue Projection</option>
+              <option value="bookings">Bookings Projection</option>
+            </select>
+
+            <select
+              value={forecastDays}
+              onChange={(e) => setForecastDays(Number(e.target.value))}
+              className="text-xs font-semibold text-slate-600 bg-slate-50 border border-slate-200 px-2.5 py-1.5 rounded-xl outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value={30}>30 Days Forward</option>
+              <option value={60}>60 Days Forward</option>
+              <option value={90}>90 Days Forward</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Caveat alert */}
+        {!forecastStats.hasEnoughData && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl p-4 flex gap-3 items-start">
+            <svg className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <div className="text-xs space-y-1">
+              <p className="font-bold">Caveat: Limited Historical Data</p>
+              <p className="text-amber-700 leading-relaxed">
+                A forecast based on fewer than 5 active transaction dates may show high sensitivity. The current slope coefficient is <span className="font-bold">{forecastStats.slope}</span>.
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className="h-[280px] text-[11px] font-medium text-slate-400">
+          {loadingForecast ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+            </div>
+          ) : forecastData.length === 0 ? (
+            <div className="h-full flex items-center justify-center">No forecast series generated.</div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={forecastData} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                <XAxis dataKey="date" stroke="#94a3b8" />
+                <YAxis stroke="#64748b" />
+                <Tooltip contentStyle={{ borderRadius: "16px", borderColor: "#f1f5f9" }} />
+                <Legend />
+                <Line type="monotone" dataKey="Historical" name={`Actual ${forecastType === "revenue" ? "Revenue ($)" : "Bookings"}`} stroke="#3b82f6" strokeWidth={2.5} dot={false} />
+                <Line type="monotone" dataKey="Projected" name={`Forecasted Trend`} stroke="#6366f1" strokeDasharray="5 5" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          )}
         </div>
       </div>
 

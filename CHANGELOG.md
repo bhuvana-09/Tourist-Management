@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 17] - 2026-07-07
+### Added
+- Installed backend report export dependencies: `json2csv`, `exceljs`, and `pdfkit`.
+- Created [forecastService.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/services/forecastService.js) implementing least-squares linear regression forecasting.
+- Created [export.controller.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/controllers/export.controller.js) and [export.routes.js](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/backend/src/routes/export.routes.js) supporting report downloads in CSV, XLSX, and PDF formats.
+- Created frontend widget [ExportButtonGroup.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/ExportButtonGroup.jsx) executing authenticated Blob file streams.
+
+### Changed
+- Refactored `analytics.controller.js` to support `/forecast` requests utilizing `forecastService`.
+- Mounted `/api/export` routes inside `app.js`.
+- Integrated least-squares forecasting panels and export action groups inside [AdminAnalytics.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/pages/AdminAnalytics.jsx).
+- Configured export route interceptions inside [axiosInstance.js](file:///C:/Users/ridhi/.gemini/antigravity/src/api/axiosInstance.js).
+
+---
+
 ## [Sprint 16] - 2026-07-07
 ### Added
 - Installed `recharts` frontend visualization dependency.

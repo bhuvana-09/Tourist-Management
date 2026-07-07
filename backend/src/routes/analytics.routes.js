@@ -6,7 +6,8 @@ const {
   getBookingsBreakdown,
   getTopDestinations,
   getTopUsers,
-  getPeakSeason
+  getPeakSeason,
+  getForecast
 } = require('../controllers/analytics.controller');
 
 const authenticate = require('../middlewares/authenticate');
@@ -21,5 +22,6 @@ router.get('/bookings', getBookingsBreakdown);
 router.get('/destinations/top', getTopDestinations);
 router.get('/users/top', getTopUsers);
 router.get('/peak-season', getPeakSeason);
+router.get('/forecast', getForecast);
 
 module.exports = router;

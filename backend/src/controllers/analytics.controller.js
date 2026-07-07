@@ -16,6 +16,7 @@
 
 const Booking = require('../models/Booking');
 const asyncHandler = require('../utils/asyncHandler');
+const forecastService = require('../services/forecastService');
 
 // Helper to construct query matching Date range on Booking.createdAt
 const getMatchQuery = (from, to) => {
@@ -313,11 +314,27 @@ const getPeakSeason = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc    Get bookings or revenue forecast
+// @route   GET /api/analytics/forecast
+// @access  Private (Admin Only)
+const getForecast = asyncHandler(async (req, res) => {
+  const { type = 'revenue', days = 30 } = req.query;
+  const forecastDays = parseInt(days, 10) || 30;
+
+  const forecast = await forecastService.generateForecast(type, forecastDays);
+
+  res.status(200).json({
+    success: true,
+    data: forecast
+  });
+});
+
 module.exports = {
   getOverview,
   getRevenueTrend,
   getBookingsBreakdown,
   getTopDestinations,
   getTopUsers,
-  getPeakSeason
+  getPeakSeason,
+  getForecast
 };
