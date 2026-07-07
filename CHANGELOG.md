@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Sprint 19d] - 2026-07-07
+### Added
+- Created reusable skeleton page loading cards [SkeletonCard.jsx](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/src/components/SkeletonCard.jsx).
+
+### Changed
+- Configured dynamic lazy imports inside `App.jsx` for major application routes, wrapped inside `<Suspense>` block components to minimize the main chunk bundle.
+- Refactored `Destinations.jsx`, `Blogs.jsx`, and `Packages.jsx` to render skeleton cards instead of generic loaders while state fetches execute.
+- Configured `loading="lazy"` on all descriptive `<img>` elements to improve scroll and page rendering metrics.
+
+---
+
+## [Sprint 19c] - 2026-07-07
+### Added
+- Linked skip-to-content accessibility anchors inside App container boundaries.
+
+### Changed
+- Integrated proper label linkages (using explicit `htmlFor` and `id` keys) on `Login.jsx` auth form elements.
+- Embedded aria descriptions and expands state checks on `NotificationBell.jsx` triggers.
+- Applied `aria-label` tags to interactive icons inside `WishlistButton.jsx`.
+- Verified WCAG AA contrast colors across the stylesheet system.
+
+---
+
 ## [Sprint 19b] - 2026-07-07
 ### Added
 - Created physical PWA configuration manifest [manifest.json](file:///C:/Users/ridhi/.gemini/antigravity/scratch/Tourist-Management/public/manifest.json).

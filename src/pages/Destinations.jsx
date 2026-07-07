@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
 import WishlistButton from "../components/WishlistButton";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function Destinations() {
   const { user } = useAuth();
@@ -255,8 +256,10 @@ export default function Destinations() {
 
       {/* Destinations Grid */}
       {loading ? (
-        <div className="flex justify-center items-center py-24">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <SkeletonCard key={idx} />
+          ))}
         </div>
       ) : destinations.length === 0 ? (
         <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
@@ -288,6 +291,7 @@ export default function Destinations() {
                     <img
                       src={dest.images && dest.images[0]?.url ? dest.images[0].url : placeholder}
                       alt={dest.name}
+                      loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       onError={(e) => {
                         e.currentTarget.src = placeholder;

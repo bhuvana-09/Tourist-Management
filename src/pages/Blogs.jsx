@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function Blogs() {
   const { user } = useAuth();
@@ -125,9 +126,10 @@ export default function Blogs() {
 
       {/* Grid List */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="text-slate-500 text-sm mt-4">Loading blogs...</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <SkeletonCard key={idx} />
+          ))}
         </div>
       ) : blogs.length === 0 ? (
         <div className="text-center py-16 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
@@ -146,6 +148,7 @@ export default function Blogs() {
                   <img
                     src={b.coverImage?.url || placeholder}
                     alt={b.title}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                   />
                   <div className="absolute top-4 left-4 flex gap-1.5">

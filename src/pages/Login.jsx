@@ -33,23 +33,24 @@ export default function Login() {
       <div className="w-full max-w-md">
         <form
           onSubmit={handleLogin}
-          className="bg-white p-8 rounded-2xl shadow-2xl space-y-6"
+          className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 p-8 rounded-2xl shadow-2xl space-y-6"
         >
           <div className="text-center space-y-2">
-            <h2 className="text-3xl font-bold text-slate-900">
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white">
               Welcome Back
             </h2>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Login to Tourist Management System
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label htmlFor="login-email" className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                 Email
               </label>
               <input
+                id="login-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +63,7 @@ export default function Login() {
 
             <div>
               <div className="flex justify-between items-center mb-2">
-                <label className="block text-sm font-semibold text-slate-700">
+                <label htmlFor="login-password" className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
                   Password
                 </label>
                 <Link
@@ -73,6 +74,7 @@ export default function Login() {
                 </Link>
               </div>
               <input
+                id="login-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -84,7 +86,7 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm" role="alert" aria-live="polite">
                 {error}
               </div>
             )}

@@ -130,6 +130,7 @@ export default function Home() {
           <img
             src="https://images.pexels.com/photos/1125976/pexels-photo-1125976.jpeg?auto=compress&cs=tinysrgb&w=1200"
             alt="About us"
+            loading="lazy"
             className="w-full h-full object-cover"
           />
         </div>

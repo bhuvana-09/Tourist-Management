@@ -21,11 +21,11 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Admin Analytics Dashboard**: **Completed** (MongoDB aggregation pipeline metrics, Recharts trends line charts, status donut charts, destination booking volume bar charts, and top customers spend tables finished in Sprint 16)
 - **Forecasting & Export**: **Completed** (Explainable least-squares linear regression forecasting models and CSV/Excel/PDF streaming report exports reusing core aggregation pipeline logic finished in Sprint 17)
 - **Blogs, Contact, FAQ Pages**: **Completed** (Admin-authored blogs with Cloudinary cover images, Nodemailer stateless contact form forwards, and static general-FAQ accordions finished in Sprint 18)
-- **Sprint 19: Polish**: **In Progress**
+- **Sprint 19: Polish**: **Completed**
   - **19a: Dark Mode**: **Completed** (Persisted, class-based dark mode integrated across global shell, Home, Destinations catalog, and DestinationDetail pages)
   - **19b: PWA**: **Completed** (Installable manifest setup, PWA icon mapping, service worker registrations, and offline fallback page completed in Sprint 19b)
-  - **19c: Accessibility (A11y)**: **Pending** (WCAG AA color contrast, screen reader labels, keyboard tab order audit)
-  - **19d: Performance**: **Pending** (Route-level lazy loading, skeleton screens, lazy-loaded images)
+  - **19c: Accessibility (A11y)**: **Completed** (WCAG AA color contrast, screen reader labels, keyboard tab order, skip links, and button aria descriptions completed in Sprint 19c)
+  - **19d: Performance**: **Completed** (Route-level lazy loading code splitting, skeleton cards, and lazy-loaded image tags completed in Sprint 19d)
 
 ## Current APIs
 
@@ -136,5 +136,5 @@ This document provides an overview of the architecture, data models, API endpoin
 - **Manual Admin Role Setup**: Plain registration defaults new accounts to the `user` role. Creating/testing admin permissions requires manually changing an account's role attribute directly to `"admin"` inside the MongoDB Atlas console.
 
 ## Next Sprint Goal
-- **Sprint 19c: Accessibility (A11y) Pass**
-  - Implement full keyboard accessibility tab flow checks, assign explicit button accessibility names, verify contrast ratios, and check alt description details.
+- **Sprint 20: Testing, CI/CD, Deployment, Docs**
+  - Implement integration testing frameworks, automate pipeline deployments, verify build hooks, and complete official API specs manuals.

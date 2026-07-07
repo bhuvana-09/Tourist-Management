@@ -201,7 +201,7 @@ export default function DestinationDetail() {
                     idx === activeImageIndex ? "border-blue-600 scale-105" : "border-transparent opacity-75 hover:opacity-100"
                   }`}
                 >
-                  <img src={img.url} alt="thumbnail" className="w-full h-full object-cover" />
+                  <img src={img.url} alt="thumbnail" loading="lazy" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

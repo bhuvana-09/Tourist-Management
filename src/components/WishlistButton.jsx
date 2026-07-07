@@ -24,6 +24,7 @@ export default function WishlistButton({ destinationId }) {
     <button
       onClick={handleClick}
       className="p-2.5 rounded-full bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-200 group flex items-center justify-center border border-slate-100 hover:scale-105"
+      aria-label={isFavorite ? "Remove from Wishlist" : "Add to Wishlist"}
       title={isFavorite ? "Remove from Wishlist" : "Add to Wishlist"}
     >
       <svg

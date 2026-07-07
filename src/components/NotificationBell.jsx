@@ -75,7 +75,9 @@ export default function NotificationBell() {
       {/* Bell Trigger */}
       <button
         onClick={() => setOpen(!open)}
-        className="relative p-2 rounded-full text-slate-600 hover:text-blue-600 hover:bg-slate-50 transition-all duration-200 focus:outline-none"
+        className="relative p-2 rounded-full text-slate-100 hover:text-white hover:bg-white/10 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/50"
+        aria-label={`View notifications, ${unreadCount} unread`}
+        aria-expanded={open}
         title="Notifications"
       >
         <svg
@@ -100,24 +102,24 @@ export default function NotificationBell() {
 
       {/* Notifications Dropdown Panel */}
       {open && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-slate-100/90 py-2 z-50 animate-scale-in origin-top-right">
-          <div className="flex justify-between items-center px-4 py-2 border-b border-slate-100">
-            <span className="font-bold text-slate-800 text-xs uppercase tracking-wide">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-100/90 dark:border-slate-800 py-2 z-50 animate-scale-in origin-top-right">
+          <div className="flex justify-between items-center px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-xs uppercase tracking-wide">
               Notifications
             </span>
             {unreadCount > 0 && (
               <button
                 onClick={handleMarkAllRead}
-                className="text-[10px] font-bold text-blue-600 hover:text-blue-700 hover:underline"
+                className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:underline"
               >
                 Mark all read
               </button>
             )}
           </div>
 
-          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100/60">
+          <div className="max-h-72 overflow-y-auto divide-y divide-slate-100/60 dark:divide-slate-800">
             {notifications.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-400">
+              <div className="p-6 text-center text-xs text-slate-400 dark:text-slate-500">
                 You have no notifications yet.
               </div>
             ) : (
@@ -125,17 +127,24 @@ export default function NotificationBell() {
                 <div
                   key={notif.id}
                   onClick={(e) => !notif.isRead && handleMarkRead(notif.id, e)}
-                  className={`p-4 flex gap-3 text-left transition-colors duration-150 cursor-pointer ${
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      if (!notif.isRead) handleMarkRead(notif.id, e);
+                    }
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  className={`p-4 flex gap-3 text-left transition-colors duration-150 cursor-pointer focus:outline-none focus:bg-slate-50 dark:focus:bg-slate-800 ${
                     notif.isRead
-                      ? "bg-white hover:bg-slate-50/50"
-                      : "bg-blue-50/20 hover:bg-blue-50/35 border-l-2 border-blue-500"
+                      ? "bg-white dark:bg-slate-900 hover:bg-slate-50/50 dark:hover:bg-slate-800/50"
+                      : "bg-blue-50/20 dark:bg-blue-950/10 hover:bg-blue-50/35 dark:hover:bg-blue-950/20 border-l-2 border-blue-500"
                   }`}
                 >
                   <div className="flex-1 space-y-1">
-                    <p className="text-xs text-slate-650 leading-relaxed">
+                    <p className="text-xs text-slate-650 dark:text-slate-300 leading-relaxed">
                       {notif.message}
                     </p>
-                    <span className="text-[10px] text-slate-400">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500">
                       {new Date(notif.createdAt).toLocaleDateString(undefined, {
                         month: "short",
                         day: "numeric",
@@ -148,6 +157,7 @@ export default function NotificationBell() {
                     <button
                       onClick={(e) => handleMarkRead(notif.id, e)}
                       className="w-2.5 h-2.5 rounded-full bg-blue-500 flex-shrink-0 mt-1"
+                      aria-label="Mark notification as read"
                       title="Mark as read"
                     />
                   )}

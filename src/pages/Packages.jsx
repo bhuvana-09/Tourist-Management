@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { backendApi as api } from "../api/axiosInstance";
 import { useAuth } from "../context/AuthContext";
+import SkeletonCard from "../components/SkeletonCard";
 
 export default function Packages() {
   const { user } = useAuth();
@@ -83,13 +84,13 @@ export default function Packages() {
     <div className="page-shell space-y-8 animate-fade">
       {/* Header Section */}
       <div className="text-center space-y-3 py-6">
-        <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
+        <p className="text-sm font-semibold text-blue-600 dark:text-blue-450 uppercase tracking-wide">
           Best Holiday Packages
         </p>
-        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900">
+        <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white">
           Travel Packages
         </h1>
-        <p className="text-base text-slate-600 max-w-2xl mx-auto">
+        <p className="text-base text-slate-600 dark:text-slate-405 max-w-2xl mx-auto">
           Curated travel experiences combining destinations, stays, and activities
         </p>
       </div>
@@ -111,8 +112,10 @@ export default function Packages() {
 
       {/* Packages Grid */}
       {loading ? (
-        <div className="flex justify-center items-center py-24">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <SkeletonCard key={idx} />
+          ))}
         </div>
       ) : packagesData.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-2xl shadow-sm border border-slate-100">
@@ -129,7 +132,7 @@ export default function Packages() {
           {packagesData.map((pkg, index) => (
             <div
               key={pkg.id}
-              className="animate-scale-in rounded-2xl bg-white shadow-lg overflow-hidden card-hover"
+              className="animate-scale-in rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-lg overflow-hidden card-hover"
               style={{ animationDelay: `${index * 0.05}s` }}
             >
               {/* Image */}
@@ -137,13 +140,14 @@ export default function Packages() {
                 <img
                   src={getPackageImage(pkg)}
                   alt={pkg.packageName}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   onError={(e) => {
                     e.currentTarget.src = placeholder;
                   }}
                 />
                 <div className="absolute top-4 right-4">
-                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/90 text-xs font-semibold text-slate-900 shadow-sm">
+                  <span className="inline-flex items-center px-3 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-xs font-semibold text-slate-900 dark:text-white shadow-sm">
                     {pkg.duration || "N/A"}
                   </span>
                 </div>
@@ -151,22 +155,22 @@ export default function Packages() {
 
               <div className="p-6 space-y-4">
                 <div>
-                  <h2 className="text-xl font-bold text-slate-900">
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                     {pkg.packageName}
                   </h2>
-                  <p className="text-sm font-semibold text-blue-600 mt-1">
+                  <p className="text-sm font-semibold text-blue-600 dark:text-blue-400 mt-1">
                     {pkg.destinationId?.name || "Unassigned"}
                   </p>
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                  <span className="text-2xl font-bold text-green-600">
+                  <span className="text-2xl font-bold text-green-600 dark:text-green-400">
                     ₹{pkg.price}
                   </span>
-                  <span className="text-xs text-slate-500">per person</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">per person</span>
                 </div>
 
-                <p className="text-sm text-slate-700 line-clamp-2">
+                <p className="text-sm text-slate-700 dark:text-slate-300 line-clamp-2">
                   {pkg.description}
                 </p>
 
